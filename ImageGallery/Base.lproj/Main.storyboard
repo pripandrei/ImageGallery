@@ -1,24 +1,97 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13122.16" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="21507" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="Ec8-vx-uC4">
+    <device id="ipad12_9rounded" orientation="portrait" layout="fullscreen" appearance="light"/>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13104.12"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="21505"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="System colors in document resources" minToolsVersion="11.0"/>
+        <capability name="collection view cell content view" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
-        <!--View Controller-->
-        <scene sceneID="tne-QT-ifu">
+        <!--Image Gallery View Controller-->
+        <scene sceneID="rqA-3t-Pq4">
             <objects>
-                <viewController id="BYZ-38-t0r" customClass="ViewController" customModuleProvider="target" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                <viewController id="Ec8-vx-uC4" customClass="ImageGalleryViewController" customModule="ImageGallery" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="Ova-cJ-Yki">
+                        <rect key="frame" x="0.0" y="0.0" width="1024" height="1366"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" xcode11CocoaTouchSystemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
-                        <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
+                        <subviews>
+                            <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="0Al-Ua-0Op">
+                                <rect key="frame" x="0.0" y="24" width="1024" height="1322"/>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="T1F-Fs-ae9">
+                                    <size key="itemSize" width="205" height="192"/>
+                                    <size key="headerReferenceSize" width="0.0" height="0.0"/>
+                                    <size key="footerReferenceSize" width="0.0" height="0.0"/>
+                                    <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                </collectionViewFlowLayout>
+                                <cells>
+                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="ImageCollectionViewCell" id="xuO-wG-TGX" customClass="ImageCollectionViewCell" customModule="ImageGallery" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="0.0" width="205" height="192"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <collectionViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="dFH-o2-fCQ">
+                                            <rect key="frame" x="0.0" y="0.0" width="205" height="192"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="XxV-X4-IGy">
+                                                    <rect key="frame" x="0.0" y="0.0" width="205" height="192"/>
+                                                </imageView>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstAttribute="trailing" secondItem="XxV-X4-IGy" secondAttribute="trailing" id="NDQ-uN-0st"/>
+                                                <constraint firstItem="XxV-X4-IGy" firstAttribute="top" secondItem="dFH-o2-fCQ" secondAttribute="top" id="TfX-cD-rI3"/>
+                                                <constraint firstAttribute="bottom" secondItem="XxV-X4-IGy" secondAttribute="bottom" id="XEu-wO-WZg"/>
+                                                <constraint firstItem="XxV-X4-IGy" firstAttribute="leading" secondItem="dFH-o2-fCQ" secondAttribute="leading" id="g3n-Dw-nDE"/>
+                                            </constraints>
+                                        </collectionViewCellContentView>
+                                        <size key="customSize" width="205" height="192"/>
+                                        <connections>
+                                            <outlet property="cellImageView" destination="XxV-X4-IGy" id="IJH-cN-fwi"/>
+                                        </connections>
+                                    </collectionViewCell>
+                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" reuseIdentifier="ImageCollectionViewCellPlaceholder" id="Whm-8Y-rrd">
+                                        <rect key="frame" x="273" y="0.0" width="205" height="192"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <collectionViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="2wq-xl-txW">
+                                            <rect key="frame" x="0.0" y="0.0" width="205" height="192"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" animating="YES" style="large" translatesAutoresizingMaskIntoConstraints="NO" id="dnX-S6-PIr">
+                                                    <rect key="frame" x="84" y="77.5" width="37" height="37"/>
+                                                </activityIndicatorView>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstItem="dnX-S6-PIr" firstAttribute="centerY" secondItem="2wq-xl-txW" secondAttribute="centerY" id="ABv-ge-IEu"/>
+                                                <constraint firstItem="dnX-S6-PIr" firstAttribute="centerX" secondItem="2wq-xl-txW" secondAttribute="centerX" id="HgZ-Ia-gQ7"/>
+                                            </constraints>
+                                        </collectionViewCellContentView>
+                                        <size key="customSize" width="205" height="192"/>
+                                    </collectionViewCell>
+                                </cells>
+                            </collectionView>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="niC-tO-l0S"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <constraints>
+                            <constraint firstItem="0Al-Ua-0Op" firstAttribute="top" secondItem="niC-tO-l0S" secondAttribute="top" id="JGB-gI-5np"/>
+                            <constraint firstItem="0Al-Ua-0Op" firstAttribute="leading" secondItem="niC-tO-l0S" secondAttribute="leading" id="Pa1-WI-amB"/>
+                            <constraint firstItem="niC-tO-l0S" firstAttribute="bottom" secondItem="0Al-Ua-0Op" secondAttribute="bottom" id="VCV-Lm-Ar0"/>
+                            <constraint firstItem="niC-tO-l0S" firstAttribute="trailing" secondItem="0Al-Ua-0Op" secondAttribute="trailing" id="aMx-3A-I0H"/>
+                        </constraints>
                     </view>
+                    <connections>
+                        <outlet property="imageGalleryCollectionView" destination="0Al-Ua-0Op" id="uwv-zE-XeM"/>
+                    </connections>
                 </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="uug-9F-k1s" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
+            <point key="canvasLocation" x="-1802.3437499999998" y="-633.3821376281112"/>
         </scene>
     </scenes>
+    <resources>
+        <systemColor name="systemBackgroundColor">
+            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
+    </resources>
 </document>
