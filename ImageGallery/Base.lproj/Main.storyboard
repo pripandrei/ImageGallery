@@ -20,6 +20,9 @@
                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="0Al-Ua-0Op">
                                 <rect key="frame" x="0.0" y="24" width="1024" height="1322"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" relation="lessThanOrEqual" constant="1322" id="bU9-a0-cft"/>
+                                </constraints>
                                 <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="T1F-Fs-ae9">
                                     <size key="itemSize" width="205" height="192"/>
                                     <size key="headerReferenceSize" width="0.0" height="0.0"/>
@@ -51,14 +54,14 @@
                                         </connections>
                                     </collectionViewCell>
                                     <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" reuseIdentifier="ImageCollectionViewCellPlaceholder" id="Whm-8Y-rrd">
-                                        <rect key="frame" x="273" y="0.0" width="205" height="192"/>
+                                        <rect key="frame" x="215" y="3" width="193" height="186"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <collectionViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="2wq-xl-txW">
-                                            <rect key="frame" x="0.0" y="0.0" width="205" height="192"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="193" height="186"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" animating="YES" style="large" translatesAutoresizingMaskIntoConstraints="NO" id="dnX-S6-PIr">
-                                                    <rect key="frame" x="84" y="77.5" width="37" height="37"/>
+                                                    <rect key="frame" x="78" y="74.5" width="37" height="37"/>
                                                 </activityIndicatorView>
                                             </subviews>
                                             <constraints>
@@ -66,7 +69,7 @@
                                                 <constraint firstItem="dnX-S6-PIr" firstAttribute="centerX" secondItem="2wq-xl-txW" secondAttribute="centerX" id="HgZ-Ia-gQ7"/>
                                             </constraints>
                                         </collectionViewCellContentView>
-                                        <size key="customSize" width="205" height="192"/>
+                                        <size key="customSize" width="193" height="186"/>
                                     </collectionViewCell>
                                 </cells>
                             </collectionView>

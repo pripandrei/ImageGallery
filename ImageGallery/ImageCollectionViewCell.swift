@@ -14,9 +14,9 @@ protocol ReusableCell {
 
 class ImageCollectionViewCell: UICollectionViewCell {
     
+    @IBOutlet weak var cellImageView: UIImageView! 
     
-    @IBOutlet weak var cellImageView: UIImageView!
-    
+    var cellURL: URL?
 }
 
 // MARK: - Identifires for reusable Cells

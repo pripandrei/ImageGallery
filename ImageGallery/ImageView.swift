@@ -14,6 +14,8 @@ class ImageView: UIView {
             setNeedsDisplay()
         }
     }
+    
+//    var cellUrl: URL?
 
     override func draw(_ rect: CGRect) {
         backgroundImage?.draw(in: bounds)
