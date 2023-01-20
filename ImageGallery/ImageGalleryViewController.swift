@@ -51,15 +51,46 @@ class ImageGalleryViewController: UIViewController {
     
     lazy var links: [URL] = {
         var urls = [URL]()
-        tempUrlsAsStrings.forEach { url in
-            var tempUrl = URL(string: url)
-            urls.append(tempUrl!)
-        }
+//        tempUrlsAsStrings.forEach { url in
+//            var tempUrl = URL(string: url)
+//            urls.append(tempUrl!)
+//        }
         return urls
     }()
     
-//    var links = [URL]()
+    var originalCellSizes: [CGSize] = []
     
+    private var cellSize: CGSize?
+    
+    private var cellAspectRatio: CGSize? {
+        get {
+            return cellSize ?? CGSize()
+        }
+        set {
+            guard let cellWidth = newValue?.width, let cellHeight = newValue?.height else {
+                return
+            }
+            let preferredCellWidth = 300.0
+            var preferredCellHeight = CGSize().height
+            
+            let ratio = round((cellWidth / cellHeight) * 100) / 100
+            preferredCellHeight = round((preferredCellWidth / ratio) * 100) / 100
+            cellSize = CGSize(width: preferredCellWidth, height: preferredCellHeight)
+        }
+//        didSet {
+//            let cellWidth = cellAspectRatio!.width
+//            let cellHeight = cellAspectRatio!.height
+//            let preferredCellWidth = 300.0
+//            var preferredCellHeight = CGSize().height
+//
+//            let ratio = round((cellWidth / cellHeight) * 100) / 100
+//            preferredCellHeight = round((preferredCellWidth / ratio) * 100) / 100
+//            cellSize = CGSize(width: preferredCellWidth, height: preferredCellHeight)
+//        }
+    }
+    
+//    var links = [URL]()
+   
     @IBOutlet weak var imageGalleryCollectionView: UICollectionView! {
         didSet {
             imageGalleryCollectionView.dataSource = self
@@ -75,7 +106,6 @@ class ImageGalleryViewController: UIViewController {
 extension ImageGalleryViewController: UICollectionViewDataSource
 {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-//        print(links.count)
         return links.count
     }
     
@@ -84,11 +114,26 @@ extension ImageGalleryViewController: UICollectionViewDataSource
         guard let imageCell = cell as? ImageCollectionViewCell else {
             return UICollectionViewCell()
         }
+        
+        cell.layoutIfNeeded()
+//        originalSizes.append(imageCell.frame.size)
+//        collectionView.reloadData()
         imageCell.cellImageView.image = nil
+        imageCell.spinner.isHidden = false
+        imageCell.spinner.startAnimating()
+        
+//        cell.frame.size = CGSize(width: 200, height: 600)
+//        let sda = collectionView.
+//        print(collectionView.collectionViewLayout.layoutAttributesForItem(at: indexPath))
+//        if let cellSize = cellSize {
+//            imageCell.frame.size = cellSize
+//            self.cellSize = nil
+//
+//        }
         
         DispatchQueue.global(qos: .userInitiated).async {
             let url = self.links[indexPath.item]
-        
+            
             imageCell.cellURL = url
             let urlContent = try? Data(contentsOf: url.imageURL)
             
@@ -98,6 +143,9 @@ extension ImageGalleryViewController: UICollectionViewDataSource
                 }
                 if url == imageCell.cellURL! {
                     imageCell.cellImageView.image = UIImage(data: imageData)
+                    imageCell.spinner.isHidden = true
+                    imageCell.spinner.stopAnimating()
+                    print("imageSize:", UIImage(data: imageData)?.size)
                 }
             }
         }
@@ -108,6 +156,29 @@ extension ImageGalleryViewController: UICollectionViewDataSource
 //        imageCell.cellImageView.image = img
         return cell
     }
+}
+
+//MARK: - UICollectionViewDelegateFlowLayout
+
+extension ImageGalleryViewController: UICollectionViewDelegateFlowLayout {
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+    
+        print(collectionView.cellForItem(at: indexPath))
+        if indexPath.item < originalCellSizes.count {
+            return originalCellSizes[indexPath.item]
+        } else {
+            return cellAspectRatio ?? CGSize.zero
+        }
+        
+    }
+
+//    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
+//        return 1.0
+//    }
+//
+//    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
+//        return 1.0
+//    }
 }
 
 //MARK: - UICollectionViewDelegate
@@ -151,7 +222,13 @@ extension ImageGalleryViewController: UICollectionViewDropDelegate {
     func collectionView(_ collectionView: UICollectionView, performDropWith coordinator: UICollectionViewDropCoordinator)
     {
         let destinationIndexPath = coordinator.destinationIndexPath ?? IndexPath(item: 0, section: 0)
-        
+        coordinator.session.loadObjects(ofClass: UIImage.self, completion: { image in
+                // review option of setting image to weak (in case some one will want to delete image before it arrives )
+            if let image = image.first as? UIImage {
+                self.cellAspectRatio = image.size
+            }
+            
+        })
         for item in coordinator.items {
             guard let sourceIndexPath = item.sourceIndexPath else {
                 handleDropFromGlobalSource(with: item, usingCoordinator: coordinator)
@@ -180,7 +257,6 @@ extension ImageGalleryViewController: UICollectionViewDropDelegate {
                         placeHolder.deletePlaceholder()
                         return
                     }
-                    print("URL:", url)
 //                    let imageView = ImageView()
 //                    imageView.cellUrl = url
 //                    self.links.append(url)
@@ -188,6 +264,7 @@ extension ImageGalleryViewController: UICollectionViewDropDelegate {
                     placeHolder.commitInsertion(dataSourceUpdates: { insertionIndexPath in
 //                        self.images.insert(imageView, at: insertionIndexPath.item)
                         self.links.insert(url, at: insertionIndexPath.item)
+                        self.originalCellSizes.insert(self.cellAspectRatio!, at: insertionIndexPath.item)
                     })
                 }
         })

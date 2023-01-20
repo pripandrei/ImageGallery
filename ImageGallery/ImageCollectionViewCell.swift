@@ -14,7 +14,14 @@ protocol ReusableCell {
 
 class ImageCollectionViewCell: UICollectionViewCell {
     
-    @IBOutlet weak var cellImageView: UIImageView! 
+    @IBOutlet weak var cellImageView: UIImageView! {
+        didSet {
+//            cellImageView.backgroundColor = .clear
+            
+        }
+    }
+    
+    @IBOutlet weak var spinner: UIActivityIndicatorView!
     
     var cellURL: URL?
 }
