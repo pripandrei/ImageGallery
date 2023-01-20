@@ -9,17 +9,7 @@ import UIKit
 
 class ImageGalleryViewController: UIViewController {
     
-//    lazy var images: [ImageView] = {
-//        var images = [ImageView]()
-//        tempImages.forEach { item in
-//            let tempImage = UIImage(named: item)
-//            let imageView = ImageView()
-//            imageView.backgroundImage = tempImage
-//            images.append(imageView)
-//        }
-//        return images
-//    }()
-    
+
     var tempUrlsAsStrings = ["https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQPrN0rmO5TlRkVdpz4Y-ym8xB9yYUU8Fwfvg&usqp=CAU",
                              "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS82ROPGcUBOizk31m3W1OVakOo1RRlXh-yEA&usqp=CAU",
                              "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTKg3ve4wM9ZNy-FPJ4S2LxASucPaH57PbfZQ&usqp=CAU",
@@ -46,8 +36,6 @@ class ImageGalleryViewController: UIViewController {
                              "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSiud57TpquWYu0I3E25USadwk4gcBPkUpG0A&usqp=CAU",
                              "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS_MnnTBf0RKBroxkzRvU2InbCMj-Gx4LrxSQ&usqp=CAU",
                              "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTb-p_iGKXM5uK9wxaq6jcaR6etbJWQnQoCPA&usqp=CAU",]
-    
-    var tempImages = "picTest3 picTest1 picTest4 picTest5 picTest6 picTest7 picTest8".components(separatedBy: " ")
     
     lazy var links: [URL] = {
         var urls = [URL]()
@@ -77,19 +65,7 @@ class ImageGalleryViewController: UIViewController {
             preferredCellHeight = round((preferredCellWidth / ratio) * 100) / 100
             cellSize = CGSize(width: preferredCellWidth, height: preferredCellHeight)
         }
-//        didSet {
-//            let cellWidth = cellAspectRatio!.width
-//            let cellHeight = cellAspectRatio!.height
-//            let preferredCellWidth = 300.0
-//            var preferredCellHeight = CGSize().height
-//
-//            let ratio = round((cellWidth / cellHeight) * 100) / 100
-//            preferredCellHeight = round((preferredCellWidth / ratio) * 100) / 100
-//            cellSize = CGSize(width: preferredCellWidth, height: preferredCellHeight)
-//        }
     }
-    
-//    var links = [URL]()
    
     @IBOutlet weak var imageGalleryCollectionView: UICollectionView! {
         didSet {
@@ -115,21 +91,9 @@ extension ImageGalleryViewController: UICollectionViewDataSource
             return UICollectionViewCell()
         }
         
-        cell.layoutIfNeeded()
-//        originalSizes.append(imageCell.frame.size)
-//        collectionView.reloadData()
         imageCell.cellImageView.image = nil
         imageCell.spinner.isHidden = false
         imageCell.spinner.startAnimating()
-        
-//        cell.frame.size = CGSize(width: 200, height: 600)
-//        let sda = collectionView.
-//        print(collectionView.collectionViewLayout.layoutAttributesForItem(at: indexPath))
-//        if let cellSize = cellSize {
-//            imageCell.frame.size = cellSize
-//            self.cellSize = nil
-//
-//        }
         
         DispatchQueue.global(qos: .userInitiated).async {
             let url = self.links[indexPath.item]
@@ -145,15 +109,9 @@ extension ImageGalleryViewController: UICollectionViewDataSource
                     imageCell.cellImageView.image = UIImage(data: imageData)
                     imageCell.spinner.isHidden = true
                     imageCell.spinner.stopAnimating()
-                    print("imageSize:", UIImage(data: imageData)?.size)
                 }
             }
         }
-        
-//        let tempImg = UIImage(named: tempImages[indexPath.item])
-//        let img = images[indexPath.item].backgroundImage ?? UIImage()
-//
-//        imageCell.cellImageView.image = img
         return cell
     }
 }
@@ -163,13 +121,11 @@ extension ImageGalleryViewController: UICollectionViewDataSource
 extension ImageGalleryViewController: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
     
-        print(collectionView.cellForItem(at: indexPath))
-        if indexPath.item < originalCellSizes.count {
-            return originalCellSizes[indexPath.item]
-        } else {
-            return cellAspectRatio ?? CGSize.zero
-        }
-        
+        assert(indexPath.item < originalCellSizes.count, "originalCellSizes count should not be less then indexPath. Check if cellSize was added on drop")
+//        guard indexPath.item < originalCellSizes.count else {
+//            return cellAspectRatio ?? CGSize.zero
+//        }
+        return originalCellSizes[indexPath.item]
     }
 
 //    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
@@ -257,12 +213,8 @@ extension ImageGalleryViewController: UICollectionViewDropDelegate {
                         placeHolder.deletePlaceholder()
                         return
                     }
-//                    let imageView = ImageView()
-//                    imageView.cellUrl = url
-//                    self.links.append(url)
-//                    self.imageNumber += 1
                     placeHolder.commitInsertion(dataSourceUpdates: { insertionIndexPath in
-//                        self.images.insert(imageView, at: insertionIndexPath.item)
+                            // consider option of refacturing links and originalSize in one object
                         self.links.insert(url, at: insertionIndexPath.item)
                         self.originalCellSizes.insert(self.cellAspectRatio!, at: insertionIndexPath.item)
                     })
