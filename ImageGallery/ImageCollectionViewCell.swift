@@ -14,13 +14,7 @@ protocol ReusableCell {
 
 class ImageCollectionViewCell: UICollectionViewCell {
     
-    @IBOutlet weak var cellImageView: UIImageView! {
-        didSet {
-//            cellImageView.backgroundColor = .clear
-            
-        }
-    }
-    
+    @IBOutlet weak var cellImageView: UIImageView!
     @IBOutlet weak var spinner: UIActivityIndicatorView!
     
     var cellURL: URL?
@@ -45,10 +39,6 @@ class ImageCollectionViewCell: UICollectionViewCell {
             cellSize = CGSize(width: preferredCellWidth, height: preferredCellHeight)
         }
     }
-    
-    
-    
-   
 }
 
 // MARK: - Identifires for reusable Cells
