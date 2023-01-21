@@ -105,7 +105,7 @@ class ImageGalleryViewController: UIViewController {
 extension ImageGalleryViewController: UICollectionViewDataSource
 {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return links.count
+        return imageCells.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
@@ -160,7 +160,7 @@ extension ImageGalleryViewController: UICollectionViewDragDelegate
             return []
         }
         let dragItem = UIDragItem(itemProvider: NSItemProvider(object: image))
-        dragItem.localObject = links[indexPath.item]
+        dragItem.localObject = imageCells[indexPath.item]
         return [dragItem]
     }
 }
@@ -184,29 +184,12 @@ extension ImageGalleryViewController: UICollectionViewDropDelegate {
 
         for item in coordinator.items {
             guard let sourceIndexPath = item.sourceIndexPath else {
-                imageCells.insert(ImageCollectionViewCell(), at: destinationIndexPath.item)
-                coordinator.session.loadObjects(ofClass: UIImage.self, completion: { image in
-                        // review option of setting image to weak (in case some one will want to delete image before it arrives )
-                    if let image = image.first as? UIImage {
-                        self.imageCells[destinationIndexPath.item].cellAspectRatio = image.size
-                        self.cellAspectRatio = image.size
-                    }
-                    
-                })
                 handleDropFromGlobalSource(with: item, usingCoordinator: coordinator)
                 continue
             }
-            guard let localURL = item.dragItem.localObject as? URL else { continue }
             collectionView.performBatchUpdates({
-//                links.remove(at: sourceIndexPath.item)
-//                links.insert(localURL, at: destinationIndexPath.item)
-//                let tempCellSize = originalCellSizes.remove(at: sourceIndexPath.item)
-//                originalCellSizes.insert(tempCellSize, at: destinationIndexPath.item)
-                
                 let removedImgCell = imageCells.remove(at: sourceIndexPath.item)
                 imageCells.insert(removedImgCell, at: destinationIndexPath.item)
-//                images.remove(at: sourceIndexPath.item)
-//                images.insert(localImage, at: destinationIndexPath.item)
                 collectionView.deleteItems(at: [sourceIndexPath])
                 collectionView.insertItems(at: [destinationIndexPath])
             })
@@ -218,6 +201,14 @@ extension ImageGalleryViewController: UICollectionViewDropDelegate {
         let destinationIndexPath = coordinator.destinationIndexPath ?? IndexPath(item: 0, section: 0)
         let placeHolder = coordinator.drop(item.dragItem, to: UICollectionViewDropPlaceholder(insertionIndexPath: destinationIndexPath, reuseIdentifier: ImageCollectionViewCellPlaceholder.identifire))
         
+        imageCells.insert(ImageCollectionViewCell(), at: destinationIndexPath.item)
+        coordinator.session.loadObjects(ofClass: UIImage.self, completion: { image in
+                // review option of setting image to weak (in case some one will want to delete image before it arrives )
+            if let image = image.first as? UIImage {
+                self.imageCells[destinationIndexPath.item].cellAspectRatio = image.size
+            }
+        })
+        
         item.dragItem.itemProvider.loadObject(ofClass: NSURL.self, completionHandler: { provider, error in
                 DispatchQueue.main.async {
                     guard let url = provider as? URL else {
@@ -227,11 +218,24 @@ extension ImageGalleryViewController: UICollectionViewDropDelegate {
                     placeHolder.commitInsertion(dataSourceUpdates: { insertionIndexPath in
                             // consider option of refacturing links and originalSize in one object
                         self.imageCells[destinationIndexPath.item].cellURL = url
-                        self.links.insert(url, at: insertionIndexPath.item)
-//                        self.originalCellSizes.insert(self.cellAspectRatio!, at: insertionIndexPath.item)
                     })
                 }
         })
+        
+//        var dropURL: URL?
+//        var dropImage: UIImage?
+//
+//        coordinator.session.loadObjects(ofClass: NSURL.self, completion: { nsurls in
+//            if let url = nsurls.first as? URL {
+//                dropURL = url
+//            }
+//        })
+//
+//        coordinator.session.loadObjects(ofClass: UIImage.self, completion: { images in
+//            if let image = images.first as? UIImage {
+//                dropImage = image
+//            }
+//        })
     }
 }
 
