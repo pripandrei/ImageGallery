@@ -46,6 +46,10 @@ class ImageGalleryViewController: UIViewController {
         return urls
     }()
     
+    var cellComponents = [CellComponent]()
+    
+    var imageCells = [ImageCollectionViewCell]()
+    
     var originalCellSizes: [CGSize] = []
     
     private var cellSize: CGSize?
@@ -75,6 +79,25 @@ class ImageGalleryViewController: UIViewController {
             imageGalleryCollectionView.dragDelegate = self
         }
     }
+    
+    func setImageFrom(url: URL, to imageCell: ImageCollectionViewCell)
+    {
+        imageCell.cellURL = url
+        DispatchQueue.global(qos: .userInitiated).async
+        {
+            let urlContent = try? Data(contentsOf: url.imageURL)
+            DispatchQueue.main.async {
+                guard let imageData = urlContent else {
+                    return
+                }
+                if url == imageCell.cellURL! {
+                    imageCell.cellImageView.image = UIImage(data: imageData)
+                    imageCell.spinner.isHidden = true
+                    imageCell.spinner.stopAnimating()
+                }
+            }
+        }
+    }
 }
 
 //MARK: - UICollectionViewDataSource
@@ -90,28 +113,15 @@ extension ImageGalleryViewController: UICollectionViewDataSource
         guard let imageCell = cell as? ImageCollectionViewCell else {
             return UICollectionViewCell()
         }
-        
         imageCell.cellImageView.image = nil
         imageCell.spinner.isHidden = false
         imageCell.spinner.startAnimating()
         
-        DispatchQueue.global(qos: .userInitiated).async {
-            let url = self.links[indexPath.item]
-            
-            imageCell.cellURL = url
-            let urlContent = try? Data(contentsOf: url.imageURL)
-            
-            DispatchQueue.main.async {
-                guard let imageData = urlContent else {
-                    return
-                }
-                if url == imageCell.cellURL! {
-                    imageCell.cellImageView.image = UIImage(data: imageData)
-                    imageCell.spinner.isHidden = true
-                    imageCell.spinner.stopAnimating()
-                }
-            }
-        }
+        let url = imageCells[indexPath.item].cellURL!
+        
+//        let url = self.links[indexPath.item]
+        setImageFrom(url: url, to: imageCell)
+        
         return cell
     }
 }
@@ -121,20 +131,13 @@ extension ImageGalleryViewController: UICollectionViewDataSource
 extension ImageGalleryViewController: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
     
-        assert(indexPath.item < originalCellSizes.count, "originalCellSizes count should not be less then indexPath. Check if cellSize was added on drop")
+//        assert(indexPath.item < originalCellSizes.count, "originalCellSizes count should not be less then indexPath. Check if cellSize was added on drop")
 //        guard indexPath.item < originalCellSizes.count else {
 //            return cellAspectRatio ?? CGSize.zero
 //        }
-        return originalCellSizes[indexPath.item]
+        return imageCells[indexPath.item].cellAspectRatio
+//        return originalCellSizes[indexPath.item]
     }
-
-//    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
-//        return 1.0
-//    }
-//
-//    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
-//        return 1.0
-//    }
 }
 
 //MARK: - UICollectionViewDelegate
@@ -178,22 +181,30 @@ extension ImageGalleryViewController: UICollectionViewDropDelegate {
     func collectionView(_ collectionView: UICollectionView, performDropWith coordinator: UICollectionViewDropCoordinator)
     {
         let destinationIndexPath = coordinator.destinationIndexPath ?? IndexPath(item: 0, section: 0)
-        coordinator.session.loadObjects(ofClass: UIImage.self, completion: { image in
-                // review option of setting image to weak (in case some one will want to delete image before it arrives )
-            if let image = image.first as? UIImage {
-                self.cellAspectRatio = image.size
-            }
-            
-        })
+
         for item in coordinator.items {
             guard let sourceIndexPath = item.sourceIndexPath else {
+                imageCells.insert(ImageCollectionViewCell(), at: destinationIndexPath.item)
+                coordinator.session.loadObjects(ofClass: UIImage.self, completion: { image in
+                        // review option of setting image to weak (in case some one will want to delete image before it arrives )
+                    if let image = image.first as? UIImage {
+                        self.imageCells[destinationIndexPath.item].cellAspectRatio = image.size
+                        self.cellAspectRatio = image.size
+                    }
+                    
+                })
                 handleDropFromGlobalSource(with: item, usingCoordinator: coordinator)
                 continue
             }
             guard let localURL = item.dragItem.localObject as? URL else { continue }
             collectionView.performBatchUpdates({
-                links.remove(at: sourceIndexPath.item)
-                links.insert(localURL, at: destinationIndexPath.item)
+//                links.remove(at: sourceIndexPath.item)
+//                links.insert(localURL, at: destinationIndexPath.item)
+//                let tempCellSize = originalCellSizes.remove(at: sourceIndexPath.item)
+//                originalCellSizes.insert(tempCellSize, at: destinationIndexPath.item)
+                
+                let removedImgCell = imageCells.remove(at: sourceIndexPath.item)
+                imageCells.insert(removedImgCell, at: destinationIndexPath.item)
 //                images.remove(at: sourceIndexPath.item)
 //                images.insert(localImage, at: destinationIndexPath.item)
                 collectionView.deleteItems(at: [sourceIndexPath])
@@ -215,8 +226,9 @@ extension ImageGalleryViewController: UICollectionViewDropDelegate {
                     }
                     placeHolder.commitInsertion(dataSourceUpdates: { insertionIndexPath in
                             // consider option of refacturing links and originalSize in one object
+                        self.imageCells[destinationIndexPath.item].cellURL = url
                         self.links.insert(url, at: insertionIndexPath.item)
-                        self.originalCellSizes.insert(self.cellAspectRatio!, at: insertionIndexPath.item)
+//                        self.originalCellSizes.insert(self.cellAspectRatio!, at: insertionIndexPath.item)
                     })
                 }
         })

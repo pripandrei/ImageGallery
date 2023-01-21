@@ -37,9 +37,8 @@
                                             <rect key="frame" x="0.0" y="0.0" width="205" height="192"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" fixedFrame="YES" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="QUY-L3-Gdv">
-                                                    <rect key="frame" x="84" y="78" width="37" height="37"/>
-                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="QUY-L3-Gdv">
+                                                    <rect key="frame" x="84" y="77.5" width="37" height="37"/>
                                                     <color key="color" red="0.2116664945" green="0.52220305440000003" blue="0.70857972010000003" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                                 </activityIndicatorView>
                                                 <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="XxV-X4-IGy">
@@ -47,9 +46,11 @@
                                                 </imageView>
                                             </subviews>
                                             <constraints>
+                                                <constraint firstItem="QUY-L3-Gdv" firstAttribute="centerX" secondItem="AJZ-00-d3F" secondAttribute="centerX" id="Hve-y5-gVo"/>
                                                 <constraint firstAttribute="trailing" secondItem="XxV-X4-IGy" secondAttribute="trailing" id="NDQ-uN-0st"/>
                                                 <constraint firstItem="XxV-X4-IGy" firstAttribute="top" secondItem="AJZ-00-d3F" secondAttribute="top" id="TfX-cD-rI3"/>
                                                 <constraint firstAttribute="bottom" secondItem="XxV-X4-IGy" secondAttribute="bottom" id="XEu-wO-WZg"/>
+                                                <constraint firstItem="QUY-L3-Gdv" firstAttribute="centerY" secondItem="AJZ-00-d3F" secondAttribute="centerY" id="fmh-6J-OBJ"/>
                                                 <constraint firstItem="XxV-X4-IGy" firstAttribute="leading" secondItem="AJZ-00-d3F" secondAttribute="leading" id="g3n-Dw-nDE"/>
                                             </constraints>
                                         </collectionViewCellContentView>
@@ -75,6 +76,11 @@
                                                 <constraint firstItem="dnX-S6-PIr" firstAttribute="centerY" secondItem="2wq-xl-txW" secondAttribute="centerY" id="ABv-ge-IEu"/>
                                                 <constraint firstItem="dnX-S6-PIr" firstAttribute="centerX" secondItem="2wq-xl-txW" secondAttribute="centerX" id="HgZ-Ia-gQ7"/>
                                             </constraints>
+                                            <variation key="default">
+                                                <mask key="subviews">
+                                                    <exclude reference="dnX-S6-PIr"/>
+                                                </mask>
+                                            </variation>
                                         </collectionViewCellContentView>
                                         <size key="customSize" width="193" height="186"/>
                                     </collectionViewCell>
