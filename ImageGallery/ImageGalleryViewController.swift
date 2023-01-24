@@ -46,7 +46,9 @@ class ImageGalleryViewController: UIViewController {
 //        return urls
 //    }()
     
+    
     var imageCells = [ImageCollectionViewCell]()
+    var scaleFactor: CGFloat = 1.0
 
     @IBOutlet weak var imageGalleryCollectionView: UICollectionView! {
         didSet {
@@ -54,6 +56,7 @@ class ImageGalleryViewController: UIViewController {
             imageGalleryCollectionView.delegate = self
             imageGalleryCollectionView.dropDelegate = self
             imageGalleryCollectionView.dragDelegate = self
+            addImageGalleryGestureRecognizers(to: imageGalleryCollectionView)
         }
     }
     
@@ -95,8 +98,6 @@ extension ImageGalleryViewController: UICollectionViewDataSource
         imageCell.spinner.startAnimating()
         
         let url = imageCells[indexPath.item].cellURL!
-        
-//        let url = self.links[indexPath.item]
         setImageFrom(url: url, to: imageCell)
         
         return cell
@@ -112,14 +113,20 @@ extension ImageGalleryViewController: UICollectionViewDelegateFlowLayout {
 //        guard indexPath.item < originalCellSizes.count else {
 //            return cellAspectRatio ?? CGSize.zero
 //        }
-        return imageCells[indexPath.item].cellAspectRatio
+    
+        let cellAspectRatio = imageCells[indexPath.item].cellAspectRatio
+        let scaledSize = CGSize(width: cellAspectRatio.width * scaleFactor, height: cellAspectRatio.height * scaleFactor)
+        return scaledSize
     }
 }
 
 //MARK: - UICollectionViewDelegate
 
 extension ImageGalleryViewController: UICollectionViewDelegate {
-    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        collectionView.deselectItem(at: indexPath, animated: true)
+//        performSegue(withIdentifier: "ShowImageVC", sender: collectionView.cellForItem(at: indexPath))
+    }
 }
 
 //MARK: - UICollectionViewDragDelegate
@@ -212,6 +219,32 @@ extension ImageGalleryViewController: UICollectionViewDropDelegate {
 //                dropImage = image
 //            }
 //        })
+    }
+}
+
+//MARK: - Navigation
+
+extension ImageGalleryViewController {
+    
+    enum ImageGallerySegue: String {
+        case ShowImageVC
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+
+        guard let identifire = segue.identifier, let identifireCase = ImageGallerySegue(rawValue: identifire) else {
+            assertionFailure("Could not map segue identifire to segue case")
+            return
+        }
+
+        switch identifireCase {
+        case .ShowImageVC:
+            let imageVC = segue.destination as! ImageVC
+            let cell = sender as! ImageCollectionViewCell
+            imageVC.galleryImage = cell.cellImageView
+        }
+
+        print("All good")
     }
 }
 
