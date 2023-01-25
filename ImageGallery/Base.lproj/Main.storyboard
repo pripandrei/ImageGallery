@@ -72,9 +72,8 @@
                                         </collectionViewCellContentView>
                                         <size key="customSize" width="205" height="192"/>
                                         <connections>
-                                            <outlet property="cellImageView" destination="XxV-X4-IGy" id="IJH-cN-fwi"/>
+                                            <outlet property="cellImageView" destination="XxV-X4-IGy" id="4Fp-cb-Drp"/>
                                             <outlet property="spinner" destination="QUY-L3-Gdv" id="EDi-fv-EGy"/>
-                                            <segue destination="CtV-FK-VfP" kind="show" identifier="ShowImageVC" id="6Wt-p1-y9U"/>
                                         </connections>
                                     </collectionViewCell>
                                     <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" reuseIdentifier="ImageCollectionViewCellPlaceholder" id="Whm-8Y-rrd">
@@ -116,6 +115,7 @@
                     <navigationItem key="navigationItem" id="aTQ-4B-jhy"/>
                     <connections>
                         <outlet property="imageGalleryCollectionView" destination="0Al-Ua-0Op" id="uwv-zE-XeM"/>
+                        <segue destination="CtV-FK-VfP" kind="show" identifier="ShowImageVC" id="eEz-gR-6ce"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="uug-9F-k1s" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>

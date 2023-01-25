@@ -46,7 +46,10 @@ class ImageGalleryViewController: UIViewController {
 //        return urls
 //    }()
     
-    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+    }
+
     var imageCells = [ImageCollectionViewCell]()
     var scaleFactor: CGFloat = 1.0
 
@@ -93,30 +96,27 @@ extension ImageGalleryViewController: UICollectionViewDataSource
         guard let imageCell = cell as? ImageCollectionViewCell else {
             return UICollectionViewCell()
         }
-        imageCell.cellImageView.image = nil
+//        imageCell.cellImageView.image = nil
+//        imageCell.cellImageView = UIImageView()
         imageCell.spinner.isHidden = false
         imageCell.spinner.startAnimating()
-        
+        print(imageCells[indexPath.item].cellImageView)
         let url = imageCells[indexPath.item].cellURL!
-        setImageFrom(url: url, to: imageCell)
+        print(imageCell.cellImageView.image)
+        imageCell.cellImageView.image = imageCells[indexPath.item].cellBackgroundImg
+        imageCell.spinner.isHidden = true
+        imageCell.spinner.stopAnimating()
+        
+        let jpegData = imageCell.cellImageView.image!.jpegData(compressionQuality: 1.0)
+        let jpegSize: Int = jpegData?.count ?? 0
+        print("size of jpeg image in KB: %f ", Double(jpegSize) / 1024.0)
+//        if imageCells[indexPath.item].cellImageView.image == nil {
+//
+//            setImageFrom(url: url, to: imageCell)
+//        }
+        
         
         return cell
-    }
-}
-
-//MARK: - UICollectionViewDelegateFlowLayout
-
-extension ImageGalleryViewController: UICollectionViewDelegateFlowLayout {
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-    
-//        assert(indexPath.item < originalCellSizes.count, "originalCellSizes count should not be less then indexPath. Check if cellSize was added on drop")
-//        guard indexPath.item < originalCellSizes.count else {
-//            return cellAspectRatio ?? CGSize.zero
-//        }
-    
-        let cellAspectRatio = imageCells[indexPath.item].cellAspectRatio
-        let scaledSize = CGSize(width: cellAspectRatio.width * scaleFactor, height: cellAspectRatio.height * scaleFactor)
-        return scaledSize
     }
 }
 
@@ -124,8 +124,10 @@ extension ImageGalleryViewController: UICollectionViewDelegateFlowLayout {
 
 extension ImageGalleryViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        collectionView.deselectItem(at: indexPath, animated: true)
-//        performSegue(withIdentifier: "ShowImageVC", sender: collectionView.cellForItem(at: indexPath))
+//        collectionView.deselectItem(at: indexPath, animated: true)
+        let cellFromImages = imageCells[indexPath.item]
+        let cell = collectionView.cellForItem(at: indexPath)
+        performSegue(withIdentifier: "ShowImageVC", sender: cellFromImages)
     }
 }
 
@@ -156,7 +158,10 @@ extension ImageGalleryViewController: UICollectionViewDropDelegate {
         return session.canLoadObjects(ofClass: NSURL.self) || session.canLoadObjects(ofClass: UIImage.self)
     }
     
-    func collectionView(_ collectionView: UICollectionView, dropSessionDidUpdate session: UIDropSession, withDestinationIndexPath destinationIndexPath: IndexPath?) -> UICollectionViewDropProposal {
+    func collectionView(_ collectionView: UICollectionView,
+                        dropSessionDidUpdate session: UIDropSession,
+                        withDestinationIndexPath destinationIndexPath: IndexPath?) -> UICollectionViewDropProposal
+    {
         let isSelf = (session.localDragSession?.localContext as? UICollectionView) == collectionView
         return UICollectionViewDropProposal(operation: isSelf ? .move : .copy, intent: .insertAtDestinationIndexPath)
     }
@@ -180,16 +185,20 @@ extension ImageGalleryViewController: UICollectionViewDropDelegate {
         }
     }
     
-    private func handleDropFromGlobalSource(with item: UICollectionViewDropItem, usingCoordinator coordinator: UICollectionViewDropCoordinator) {
+    private func handleDropFromGlobalSource(with item: UICollectionViewDropItem,
+                                            usingCoordinator coordinator: UICollectionViewDropCoordinator)
+    {
         let destinationIndexPath = coordinator.destinationIndexPath ?? IndexPath(item: 0, section: 0)
         let placeHolder = coordinator.drop(item.dragItem, to: UICollectionViewDropPlaceholder(insertionIndexPath: destinationIndexPath, reuseIdentifier: ImageCollectionViewCellPlaceholder.identifire))
         let newCell = ImageCollectionViewCell()
         
         imageCells.insert(newCell, at: destinationIndexPath.item)
+        
         coordinator.session.loadObjects(ofClass: UIImage.self, completion: { image in
                 // review option of setting image to weak (in case some one will want to delete image before it arrives )
             if let image = image.first as? UIImage {
                 self.imageCells[destinationIndexPath.item].cellAspectRatio = image.size
+                self.imageCells[destinationIndexPath.item].cellBackgroundImg = image
             }
         })
         
@@ -220,6 +229,27 @@ extension ImageGalleryViewController: UICollectionViewDropDelegate {
 //            }
 //        })
     }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        imageGalleryCollectionView.reloadData()
+    }
+}
+
+//MARK: - UICollectionViewDelegateFlowLayout
+
+extension ImageGalleryViewController: UICollectionViewDelegateFlowLayout {
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+    
+//        assert(indexPath.item < originalCellSizes.count, "originalCellSizes count should not be less then indexPath. Check if cellSize was added on drop")
+//        guard indexPath.item < originalCellSizes.count else {
+//            return cellAspectRatio ?? CGSize.zero
+//        }
+    
+        let cellAspectRatio = imageCells[indexPath.item].cellAspectRatio
+        let scaledSize = CGSize(width: cellAspectRatio.width * scaleFactor, height: cellAspectRatio.height * scaleFactor)
+        return scaledSize
+    }
 }
 
 //MARK: - Navigation
@@ -236,15 +266,15 @@ extension ImageGalleryViewController {
             assertionFailure("Could not map segue identifire to segue case")
             return
         }
-
+//        let index = imageGalleryCollectionView.indexPathsForSelectedItems?.first
+//        let tempCel = imageGalleryCollectionView.cellForItem(at: index!) as? ImageCollectionViewCell
         switch identifireCase {
         case .ShowImageVC:
-            let imageVC = segue.destination as! ImageVC
             let cell = sender as! ImageCollectionViewCell
-            imageVC.galleryImage = cell.cellImageView
+            let imageVC = segue.destination as! ImageVC
+//            imageVC.tempIMG = (tempCel?.cellBackgroundImg)!
+            imageVC.galleryImage.image = cell.cellBackgroundImg
         }
-
-        print("All good")
     }
 }
 

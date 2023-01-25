@@ -9,8 +9,10 @@ import UIKit
 
 class ImageVC: UIViewController {
     
-    lazy var galleryImage = UIImageView()
+    var galleryImage = UIImageView()
     
+    var tempIMG = UIImage()
+//
     var image: UIImage? {
         get {
             return galleryImage.image
@@ -20,20 +22,22 @@ class ImageVC: UIViewController {
             galleryImage.image = newValue
             scrollView.backgroundColor = .brown
             scrollView.contentSize = CGSize(width: scrollView.frame.width * 2, height: scrollView.frame.height * 2)
+            scrollView.addSubview(galleryImage)
         }
     }
     
-//    override func viewDidLoad() {
-//        super.viewDidLoad()
-//        image = galleryImage.image
-//    }
 
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+//        image = tempIMG
+//        galleryImage.image = tempIMG
+        image = galleryImage.image
+    }
+    
     @IBOutlet weak var scrollView: UIScrollView! {
         didSet {
-            scrollView.addSubview(galleryImage)
-//            self.image = galleryImage.image
-//            let image = UIImage(named: "picTest1")
-//            self.image = image
+//            scrollView.addSubview(galleryImage)
         }
     }
 }

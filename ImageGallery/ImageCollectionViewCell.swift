@@ -14,10 +14,38 @@ protocol ReusableCell {
 
 class ImageCollectionViewCell: UICollectionViewCell {
     
-    @IBOutlet weak var cellImageView: UIImageView!
+    @IBOutlet weak var cellImageView: UIImageView!  {
+        didSet {
+            let asd = Int()
+//            cellBackgroundImg = cellImageView.image
+        }
+    }
+//
+//
+//    var cellImageView: UIImageView = {
+////        didSet {
+//            let cellImageViewTemp = UIImageView()
+//        cellImageViewTemp.image = UIImage(named: "picTest7")
+//        cellImageViewTemp.frame = CGRect(x: 0, y: 0, width: 60, height: 60)
+////            contentView.addSubview(cellImageView)
+////            cellImageView.contentMode = .scaleAspectFit
+////            print("image",cellImageView.image?.size)
+//            return cellImageViewTemp
+////        }
+//    }()
+    
     @IBOutlet weak var spinner: UIActivityIndicatorView!
     
+    var cellBackgroundImg: UIImage?
+    
     var cellURL: URL?
+//    {
+//        didSet {
+//            contentView.addSubview(cellImageView)
+//            cellImageView.contentMode = .scaleAspectFit
+//            print("image",cellImageView.image?.size)
+//        }
+//    }
     
     var cellSize: CGSize?
 
