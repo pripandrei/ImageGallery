@@ -28,7 +28,7 @@
         <!--Image Gallery View Controller-->
         <scene sceneID="rqA-3t-Pq4">
             <objects>
-                <viewController id="Ec8-vx-uC4" customClass="ImageGalleryViewController" customModule="ImageGallery" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="STORID" id="Ec8-vx-uC4" customClass="ImageGalleryViewController" customModule="ImageGallery" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="Ova-cJ-Yki">
                         <rect key="frame" x="0.0" y="0.0" width="820" height="1180"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -49,7 +49,7 @@
                                     <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="ImageCollectionViewCell" id="xuO-wG-TGX" customClass="ImageCollectionViewCell" customModule="ImageGallery" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="0.0" width="205" height="192"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                        <collectionViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="AJZ-00-d3F">
+                                        <collectionViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="k51-k0-UfL">
                                             <rect key="frame" x="0.0" y="0.0" width="205" height="192"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
@@ -62,18 +62,19 @@
                                                 </imageView>
                                             </subviews>
                                             <constraints>
-                                                <constraint firstItem="QUY-L3-Gdv" firstAttribute="centerX" secondItem="AJZ-00-d3F" secondAttribute="centerX" id="Hve-y5-gVo"/>
+                                                <constraint firstItem="QUY-L3-Gdv" firstAttribute="centerX" secondItem="k51-k0-UfL" secondAttribute="centerX" id="Hve-y5-gVo"/>
                                                 <constraint firstAttribute="trailing" secondItem="XxV-X4-IGy" secondAttribute="trailing" id="NDQ-uN-0st"/>
-                                                <constraint firstItem="XxV-X4-IGy" firstAttribute="top" secondItem="AJZ-00-d3F" secondAttribute="top" id="TfX-cD-rI3"/>
+                                                <constraint firstItem="XxV-X4-IGy" firstAttribute="top" secondItem="k51-k0-UfL" secondAttribute="top" id="TfX-cD-rI3"/>
                                                 <constraint firstAttribute="bottom" secondItem="XxV-X4-IGy" secondAttribute="bottom" id="XEu-wO-WZg"/>
-                                                <constraint firstItem="QUY-L3-Gdv" firstAttribute="centerY" secondItem="AJZ-00-d3F" secondAttribute="centerY" id="fmh-6J-OBJ"/>
-                                                <constraint firstItem="XxV-X4-IGy" firstAttribute="leading" secondItem="AJZ-00-d3F" secondAttribute="leading" id="g3n-Dw-nDE"/>
+                                                <constraint firstItem="QUY-L3-Gdv" firstAttribute="centerY" secondItem="k51-k0-UfL" secondAttribute="centerY" id="fmh-6J-OBJ"/>
+                                                <constraint firstItem="XxV-X4-IGy" firstAttribute="leading" secondItem="k51-k0-UfL" secondAttribute="leading" id="g3n-Dw-nDE"/>
                                             </constraints>
                                         </collectionViewCellContentView>
                                         <size key="customSize" width="205" height="192"/>
                                         <connections>
-                                            <outlet property="cellImageView" destination="XxV-X4-IGy" id="4Fp-cb-Drp"/>
+                                            <outlet property="cellImageView" destination="XxV-X4-IGy" id="BTe-JF-07u"/>
                                             <outlet property="spinner" destination="QUY-L3-Gdv" id="EDi-fv-EGy"/>
+                                            <segue destination="CtV-FK-VfP" kind="show" identifier="ShowImageVC" id="j77-gW-Ofi"/>
                                         </connections>
                                     </collectionViewCell>
                                     <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" reuseIdentifier="ImageCollectionViewCellPlaceholder" id="Whm-8Y-rrd">
@@ -115,7 +116,6 @@
                     <navigationItem key="navigationItem" id="aTQ-4B-jhy"/>
                     <connections>
                         <outlet property="imageGalleryCollectionView" destination="0Al-Ua-0Op" id="uwv-zE-XeM"/>
-                        <segue destination="CtV-FK-VfP" kind="show" identifier="ShowImageVC" id="eEz-gR-6ce"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="uug-9F-k1s" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>

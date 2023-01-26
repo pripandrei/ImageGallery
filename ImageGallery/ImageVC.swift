@@ -11,8 +11,6 @@ class ImageVC: UIViewController {
     
     var galleryImage = UIImageView()
     
-    var tempIMG = UIImage()
-//
     var image: UIImage? {
         get {
             return galleryImage.image
@@ -26,12 +24,8 @@ class ImageVC: UIViewController {
         }
     }
     
-
-    
     override func viewDidLoad() {
         super.viewDidLoad()
-//        image = tempIMG
-//        galleryImage.image = tempIMG
         image = galleryImage.image
     }
     

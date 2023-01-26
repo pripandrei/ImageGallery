@@ -7,17 +7,17 @@
 
 import UIKit
 
-class ImageView: UIView {
-    
-    var backgroundImage: UIImage? {
-        didSet {
-            setNeedsDisplay()
-        }
-    }
-
-//    var cellUrl: URL?
-
-    override func draw(_ rect: CGRect) {
-        backgroundImage?.draw(in: bounds)
-    }
-}
+//class ImageView: UIView {
+//
+//    var backgroundImage: UIImage? {
+//        didSet {
+//            setNeedsDisplay()
+//        }
+//    }
+//
+////    var cellUrl: URL?
+//
+//    override func draw(_ rect: CGRect) {
+//        backgroundImage?.draw(in: bounds)
+//    }
+//}
