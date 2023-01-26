@@ -49,7 +49,7 @@
                                     <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="ImageCollectionViewCell" id="xuO-wG-TGX" customClass="ImageCollectionViewCell" customModule="ImageGallery" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="0.0" width="205" height="192"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                        <collectionViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="k51-k0-UfL">
+                                        <collectionViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="0di-Rk-89x">
                                             <rect key="frame" x="0.0" y="0.0" width="205" height="192"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
@@ -62,13 +62,18 @@
                                                 </imageView>
                                             </subviews>
                                             <constraints>
-                                                <constraint firstItem="QUY-L3-Gdv" firstAttribute="centerX" secondItem="k51-k0-UfL" secondAttribute="centerX" id="Hve-y5-gVo"/>
+                                                <constraint firstItem="QUY-L3-Gdv" firstAttribute="centerX" secondItem="0di-Rk-89x" secondAttribute="centerX" id="Hve-y5-gVo"/>
                                                 <constraint firstAttribute="trailing" secondItem="XxV-X4-IGy" secondAttribute="trailing" id="NDQ-uN-0st"/>
-                                                <constraint firstItem="XxV-X4-IGy" firstAttribute="top" secondItem="k51-k0-UfL" secondAttribute="top" id="TfX-cD-rI3"/>
+                                                <constraint firstItem="XxV-X4-IGy" firstAttribute="top" secondItem="0di-Rk-89x" secondAttribute="top" id="TfX-cD-rI3"/>
                                                 <constraint firstAttribute="bottom" secondItem="XxV-X4-IGy" secondAttribute="bottom" id="XEu-wO-WZg"/>
-                                                <constraint firstItem="QUY-L3-Gdv" firstAttribute="centerY" secondItem="k51-k0-UfL" secondAttribute="centerY" id="fmh-6J-OBJ"/>
-                                                <constraint firstItem="XxV-X4-IGy" firstAttribute="leading" secondItem="k51-k0-UfL" secondAttribute="leading" id="g3n-Dw-nDE"/>
+                                                <constraint firstItem="QUY-L3-Gdv" firstAttribute="centerY" secondItem="0di-Rk-89x" secondAttribute="centerY" id="fmh-6J-OBJ"/>
+                                                <constraint firstItem="XxV-X4-IGy" firstAttribute="leading" secondItem="0di-Rk-89x" secondAttribute="leading" id="g3n-Dw-nDE"/>
                                             </constraints>
+                                            <variation key="default">
+                                                <mask key="subviews">
+                                                    <exclude reference="XxV-X4-IGy"/>
+                                                </mask>
+                                            </variation>
                                         </collectionViewCellContentView>
                                         <size key="customSize" width="205" height="192"/>
                                         <connections>

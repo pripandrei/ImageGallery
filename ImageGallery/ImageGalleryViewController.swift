@@ -55,7 +55,7 @@ extension ImageGalleryViewController: UICollectionViewDataSource
         guard let imageCell = cell as? ImageCollectionViewCell else {
             return UICollectionViewCell()
         }
-        imageCell.cellImageView.image = nil
+        imageCell.backgroundImageOfCell = nil
         imageCell.spinner.isHidden = false
         imageCell.spinner.startAnimating()
         
