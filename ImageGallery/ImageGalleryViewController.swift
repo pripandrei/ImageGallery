@@ -178,15 +178,16 @@ extension ImageGalleryViewController: UICollectionViewDropDelegate {
 //        })
     }
     
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        imageGalleryCollectionView.reloadData()
-    }
+//    override func viewWillAppear(_ animated: Bool) {
+//        super.viewWillAppear(animated)
+//        imageGalleryCollectionView.reloadData()
+//    }
 }
 
 //MARK: - UICollectionViewDelegateFlowLayout
 
-extension ImageGalleryViewController: UICollectionViewDelegateFlowLayout {
+extension ImageGalleryViewController: UICollectionViewDelegateFlowLayout
+{
     func collectionView(_ collectionView: UICollectionView,
                         layout collectionViewLayout: UICollectionViewLayout,
                         sizeForItemAt indexPath: IndexPath) -> CGSize

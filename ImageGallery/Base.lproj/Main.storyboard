@@ -157,35 +157,6 @@
             </objects>
             <point key="canvasLocation" x="477.07317073170731" y="-634.06779661016958"/>
         </scene>
-        <!--View Controller-->
-        <scene sceneID="xr7-Cd-qwB">
-            <objects>
-                <viewController id="eEJ-ca-BeP" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="0q1-y9-6qu">
-                        <rect key="frame" x="0.0" y="0.0" width="820" height="1180"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <subviews>
-                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="1ed-7m-5hY">
-                                <rect key="frame" x="290" y="526" width="240" height="128"/>
-                                <color key="backgroundColor" red="0.3820329442" green="0.60272046840000004" blue="0.70857972010000003" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
-                                <viewLayoutGuide key="contentLayoutGuide" id="c1r-3x-gxB"/>
-                                <viewLayoutGuide key="frameLayoutGuide" id="Tw4-Da-PdZ"/>
-                            </scrollView>
-                        </subviews>
-                        <viewLayoutGuide key="safeArea" id="mrq-Us-La9"/>
-                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
-                        <constraints>
-                            <constraint firstItem="1ed-7m-5hY" firstAttribute="leading" secondItem="mrq-Us-La9" secondAttribute="leading" id="GOA-iT-4aq"/>
-                            <constraint firstItem="1ed-7m-5hY" firstAttribute="top" secondItem="mrq-Us-La9" secondAttribute="top" id="bx2-zg-Vf8"/>
-                            <constraint firstItem="mrq-Us-La9" firstAttribute="trailing" secondItem="1ed-7m-5hY" secondAttribute="trailing" id="gzO-bu-VcW"/>
-                            <constraint firstItem="mrq-Us-La9" firstAttribute="bottom" secondItem="1ed-7m-5hY" secondAttribute="bottom" id="ny9-2r-GAE"/>
-                        </constraints>
-                    </view>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="TMv-R6-z43" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="1589.2682926829268" y="-1171.0169491525423"/>
-        </scene>
     </scenes>
     <resources>
         <systemColor name="systemBackgroundColor">
