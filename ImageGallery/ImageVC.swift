@@ -16,10 +16,12 @@ class ImageVC: UIViewController {
             return galleryImage.image
         }
         set {
-            galleryImage.frame = CGRect(origin: CGPoint.zero, size: CGSize(width: scrollView.frame.width / 2, height: scrollView.frame.height / 2))
+//            let xOrigin = scrollView.frame.width -
+//            let yOrigin =
             galleryImage.image = newValue
+            galleryImage.frame = CGRect(origin: CGPoint.zero, size: CGSize(width: scrollView.frame.width , height: scrollView.frame.height))
             scrollView.backgroundColor = .brown
-            scrollView.contentSize = CGSize(width: scrollView.frame.width * 2, height: scrollView.frame.height * 2)
+            scrollView.contentSize = CGSize(width: scrollView.frame.width, height: scrollView.frame.height)
             scrollView.addSubview(galleryImage)
         }
     }

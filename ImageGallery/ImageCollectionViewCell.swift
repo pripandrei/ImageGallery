@@ -7,19 +7,12 @@
 
 import UIKit
 
-protocol ReusableCell {
-    static var identifire: String { get }
-}
-
-class ImageCollectionViewCell: UICollectionViewCell {
+struct CellComponents {
     
-    @IBOutlet weak var cellImageView: UIImageView!
-    @IBOutlet weak var spinner: UIActivityIndicatorView!
+    var identifire: Int?
     
     var cellURL: URL?
     var cellSize: CGSize?
-
-    var backgroundImageOfCell: UIImage? { didSet { setNeedsDisplay() } }
     
     var cellAspectRatio: CGSize {
         get {
@@ -36,21 +29,19 @@ class ImageCollectionViewCell: UICollectionViewCell {
             cellSize = CGSize(width: preferredCellWidth, height: preferredCellHeight)
         }
     }
+}
+
+class ImageCollectionViewCell: UICollectionViewCell {
+    
+    @IBOutlet weak var cellImageView: UIImageView!
+    @IBOutlet weak var spinner: UIActivityIndicatorView!
+
+    var identifire: Int?
+
+    var backgroundImageOfCell: UIImage? { didSet { setNeedsDisplay() } }
     
     override func draw(_ rect: CGRect) {
         backgroundImageOfCell?.draw(in: bounds)
     }
 }
-
-// MARK: - Identifires for reusable Cells
-
-class ImageCollectionViewCellPlaceholder: ReusableCell {}
-
-extension ReusableCell {
-    static var identifire: String {
-        return String(describing: self)
-    }
-}
-
-extension ImageCollectionViewCell: ReusableCell {}
 

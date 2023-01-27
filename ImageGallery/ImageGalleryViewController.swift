@@ -9,12 +9,14 @@ import UIKit
 
 class ImageGalleryViewController: UIViewController {
     
-    var imageCells = [ImageCollectionViewCell]()
+    var cellComponents = [CellComponents]()
     var scaleFactor: CGFloat = 1.0
-    
-    func setImageFrom(url: URL, to imageCell: ImageCollectionViewCell)
+
+    func setImage(to imageCell: ImageCollectionViewCell, using index: Int)
     {
-        imageCell.cellURL = url
+        guard let url = cellComponents[index].cellURL else {
+            return
+        }
         DispatchQueue.global(qos: .userInitiated).async
         {
             let urlContent = try? Data(contentsOf: url.imageURL)
@@ -22,7 +24,7 @@ class ImageGalleryViewController: UIViewController {
                 guard let imageData = urlContent else {
                     return
                 }
-                if url == imageCell.cellURL! {
+                if imageCell.identifire == index {
                     imageCell.backgroundImageOfCell = UIImage(data: imageData)
                     imageCell.spinner.isHidden = true
                     imageCell.spinner.stopAnimating()
@@ -47,7 +49,7 @@ class ImageGalleryViewController: UIViewController {
 extension ImageGalleryViewController: UICollectionViewDataSource
 {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return imageCells.count
+        return cellComponents.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
@@ -58,10 +60,9 @@ extension ImageGalleryViewController: UICollectionViewDataSource
         imageCell.backgroundImageOfCell = nil
         imageCell.spinner.isHidden = false
         imageCell.spinner.startAnimating()
-        
-        let url = imageCells[indexPath.item].cellURL!
-        
-        setImageFrom(url: url, to: imageCell)
+        imageCell.identifire = indexPath.item
+
+        setImage(to: imageCell, using: indexPath.item)
 
         return cell
     }
@@ -73,7 +74,7 @@ extension ImageGalleryViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath)
     {
         collectionView.deselectItem(at: indexPath, animated: true)
-        let cell = collectionView.cellForItem(at: indexPath)
+//        let cell = collectionView.cellForItem(at: indexPath)
 //        performSegue(withIdentifier: "ShowImageVC", sender: cell)
     }
 }
@@ -94,7 +95,7 @@ extension ImageGalleryViewController: UICollectionViewDragDelegate
             return []
         }
         let dragItem = UIDragItem(itemProvider: NSItemProvider(object: image))
-        dragItem.localObject = imageCells[indexPath.item]
+        dragItem.localObject = cellComponents[indexPath.item]
         return [dragItem]
     }
 }
@@ -125,8 +126,8 @@ extension ImageGalleryViewController: UICollectionViewDropDelegate {
                 continue
             }
             collectionView.performBatchUpdates({
-                let removedImgCell = imageCells.remove(at: sourceIndexPath.item)
-                imageCells.insert(removedImgCell, at: destinationIndexPath.item)
+                let removedImgCell = cellComponents.remove(at: sourceIndexPath.item)
+                cellComponents.insert(removedImgCell, at: destinationIndexPath.item)
                 collectionView.deleteItems(at: [sourceIndexPath])
                 collectionView.insertItems(at: [destinationIndexPath])
             })
@@ -139,14 +140,14 @@ extension ImageGalleryViewController: UICollectionViewDropDelegate {
     {
         let destinationIndexPath = coordinator.destinationIndexPath ?? IndexPath(item: 0, section: 0)
         let placeHolder = coordinator.drop(item.dragItem, to: UICollectionViewDropPlaceholder(insertionIndexPath: destinationIndexPath, reuseIdentifier: ImageCollectionViewCellPlaceholder.identifire))
-        let newCell = ImageCollectionViewCell(frame: CGRect(origin: CGPoint.zero, size: CGSize(width: 40.0, height: 40)))
+        let newComponent = CellComponents()
         
-        imageCells.insert(newCell, at: destinationIndexPath.item)
+        cellComponents.insert(newComponent, at: destinationIndexPath.item)
         
         coordinator.session.loadObjects(ofClass: UIImage.self, completion: { image in
                 // review option of setting image to weak (in case some one will want to delete image before it arrives )
             if let image = image.first as? UIImage {
-                self.imageCells[destinationIndexPath.item].cellAspectRatio = image.size
+                self.cellComponents[destinationIndexPath.item].cellAspectRatio = image.size
             }
         })
         
@@ -157,7 +158,7 @@ extension ImageGalleryViewController: UICollectionViewDropDelegate {
                         return
                     }
                     placeHolder.commitInsertion(dataSourceUpdates: { insertionIndexPath in
-                        self.imageCells[destinationIndexPath.item].cellURL = url
+                        self.cellComponents[destinationIndexPath.item].cellURL = url
                     })
                 }
         })
@@ -192,7 +193,9 @@ extension ImageGalleryViewController: UICollectionViewDelegateFlowLayout
                         layout collectionViewLayout: UICollectionViewLayout,
                         sizeForItemAt indexPath: IndexPath) -> CGSize
     {
-        let cellAspectRatio = imageCells[indexPath.item].cellAspectRatio
+//        if let cell = collectionView.cellForItem(at: indexPath) as? ImageCollectionViewCell { cell.setNeedsDisplay() }
+        (collectionView.cellForItem(at: indexPath) as? ImageCollectionViewCell)?.setNeedsDisplay()
+        let cellAspectRatio = cellComponents[indexPath.item].cellAspectRatio
         let scaledSize = CGSize(width: cellAspectRatio.width * scaleFactor, height: cellAspectRatio.height * scaleFactor)
         return scaledSize
     }
@@ -218,6 +221,7 @@ extension ImageGalleryViewController {
             let cell = sender as! ImageCollectionViewCell
             let imageVC = segue.destination as! ImageVC
             imageVC.galleryImage.image = cell.backgroundImageOfCell
+            
         }
     }
 }
