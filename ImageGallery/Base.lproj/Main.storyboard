@@ -69,15 +69,10 @@
                                                 <constraint firstItem="QUY-L3-Gdv" firstAttribute="centerY" secondItem="0di-Rk-89x" secondAttribute="centerY" id="fmh-6J-OBJ"/>
                                                 <constraint firstItem="XxV-X4-IGy" firstAttribute="leading" secondItem="0di-Rk-89x" secondAttribute="leading" id="g3n-Dw-nDE"/>
                                             </constraints>
-                                            <variation key="default">
-                                                <mask key="subviews">
-                                                    <exclude reference="XxV-X4-IGy"/>
-                                                </mask>
-                                            </variation>
                                         </collectionViewCellContentView>
                                         <size key="customSize" width="205" height="192"/>
                                         <connections>
-                                            <outlet property="cellImageView" destination="XxV-X4-IGy" id="BTe-JF-07u"/>
+                                            <outlet property="cellImageView" destination="XxV-X4-IGy" id="dZ7-Eo-2UZ"/>
                                             <outlet property="spinner" destination="QUY-L3-Gdv" id="EDi-fv-EGy"/>
                                             <segue destination="CtV-FK-VfP" kind="show" identifier="ShowImageVC" id="j77-gW-Ofi"/>
                                         </connections>

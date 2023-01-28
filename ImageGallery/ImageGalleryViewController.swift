@@ -87,7 +87,7 @@ extension ImageGalleryViewController: UICollectionViewDragDelegate
     }
     
     private func dragItem(at indexPath: IndexPath) -> [UIDragItem] {
-        guard let image = (imageGalleryCollectionView.cellForItem(at: indexPath) as? ImageCollectionViewCell)?.backgroundImageOfCell else {
+        guard let image = (imageGalleryCollectionView.cellForItem(at: indexPath) as? ImageCollectionViewCell)?.cellImageView.image else {
             return []
         }
         let dragItem = UIDragItem(itemProvider: NSItemProvider(object: image))
@@ -216,7 +216,7 @@ extension ImageGalleryViewController {
         case .ShowImageVC:
             let cell = sender as! ImageCollectionViewCell
             let imageVC = segue.destination as! ImageVC
-            imageVC.galleryImage.image = cell.backgroundImageOfCell
+            imageVC.galleryImage.image = cell.cellImageView.image
             
         }
     }

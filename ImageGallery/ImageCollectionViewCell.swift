@@ -49,7 +49,7 @@ extension ImageCollectionViewCell
         guard let url = imageUrl else {
             return
         }
-        self.backgroundImageOfCell = nil
+        self.cellImageView.image = nil
         self.spinner.isHidden = false
         self.spinner.startAnimating()
         
@@ -61,7 +61,7 @@ extension ImageCollectionViewCell
                     return
                 }
                 if self?.imageUrl == url {
-                    self?.backgroundImageOfCell = UIImage(data: imageData)
+                    self?.cellImageView.image = UIImage(data: imageData)
                     self?.spinner.isHidden = true
                     self?.spinner.stopAnimating()
                 }
