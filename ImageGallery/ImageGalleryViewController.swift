@@ -12,26 +12,26 @@ class ImageGalleryViewController: UIViewController {
     var cellComponents = [CellComponents]()
     var scaleFactor: CGFloat = 1.0
 
-    func setImage(to imageCell: ImageCollectionViewCell, using index: Int)
-    {
-        guard let url = cellComponents[index].cellURL else {
-            return
-        }
-        DispatchQueue.global(qos: .userInitiated).async
-        {
-            let urlContent = try? Data(contentsOf: url.imageURL)
-            DispatchQueue.main.async {
-                guard let imageData = urlContent else {
-                    return
-                }
-                if imageCell.identifire == index {
-                    imageCell.backgroundImageOfCell = UIImage(data: imageData)
-                    imageCell.spinner.isHidden = true
-                    imageCell.spinner.stopAnimating()
-                }
-            }
-        }
-    }
+//    func setImage(to imageCell: ImageCollectionViewCell, using index: Int)
+//    {
+//        guard let url = cellComponents[index].cellURL else {
+//            return
+//        }
+//        DispatchQueue.global(qos: .userInitiated).async
+//        {
+//            let urlContent = try? Data(contentsOf: url.imageURL)
+//            DispatchQueue.main.async {
+//                guard let imageData = urlContent else {
+//                    return
+//                }
+//                if imageCell.identifire == index {
+//                    imageCell.backgroundImageOfCell = UIImage(data: imageData)
+//                    imageCell.spinner.isHidden = true
+//                    imageCell.spinner.stopAnimating()
+//                }
+//            }
+//        }
+//    }
     
     @IBOutlet weak var imageGalleryCollectionView: UICollectionView! {
         didSet {
@@ -53,17 +53,13 @@ extension ImageGalleryViewController: UICollectionViewDataSource
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ImageCollectionViewCell.identifire, for: indexPath)
-        guard let imageCell = cell as? ImageCollectionViewCell else {
-            return UICollectionViewCell()
+        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ImageCollectionViewCell.identifire, for: indexPath)
+                as? ImageCollectionViewCell else {
+            fatalError("Unable to dequeu reusable cell")
         }
-        imageCell.backgroundImageOfCell = nil
-        imageCell.spinner.isHidden = false
-        imageCell.spinner.startAnimating()
-        imageCell.identifire = indexPath.item
 
-        setImage(to: imageCell, using: indexPath.item)
-
+        cell.imageUrl = cellComponents[indexPath.item].cellURL
+        
         return cell
     }
 }

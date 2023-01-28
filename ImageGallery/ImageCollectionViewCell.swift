@@ -9,8 +9,6 @@ import UIKit
 
 struct CellComponents {
     
-    var identifire: Int?
-    
     var cellURL: URL?
     var cellSize: CGSize?
     
@@ -36,12 +34,39 @@ class ImageCollectionViewCell: UICollectionViewCell {
     @IBOutlet weak var cellImageView: UIImageView!
     @IBOutlet weak var spinner: UIActivityIndicatorView!
 
-    var identifire: Int?
-
+    var imageUrl: URL? { didSet { setImage() } }
+    
     var backgroundImageOfCell: UIImage? { didSet { setNeedsDisplay() } }
     
     override func draw(_ rect: CGRect) {
         backgroundImageOfCell?.draw(in: bounds)
+    }
+}
+
+extension ImageCollectionViewCell
+{
+    private func setImage() {
+        guard let url = imageUrl else {
+            return
+        }
+        self.backgroundImageOfCell = nil
+        self.spinner.isHidden = false
+        self.spinner.startAnimating()
+        
+        DispatchQueue.global(qos: .userInitiated).async
+        {
+            let urlContent = try? Data(contentsOf: url.imageURL)
+            DispatchQueue.main.async { [weak self] in
+                guard let imageData = urlContent else {
+                    return
+                }
+                if self?.imageUrl == url {
+                    self?.backgroundImageOfCell = UIImage(data: imageData)
+                    self?.spinner.isHidden = true
+                    self?.spinner.stopAnimating()
+                }
+            }
+        }
     }
 }
 
