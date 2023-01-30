@@ -57,7 +57,7 @@ extension ImageGalleryViewController: UICollectionViewDataSource
                 as? ImageCollectionViewCell else {
             fatalError("Unable to dequeu reusable cell")
         }
-
+        
         cell.imageUrl = cellComponents[indexPath.item].cellURL
         
         return cell
@@ -208,16 +208,17 @@ extension ImageGalleryViewController {
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
 
         guard let identifire = segue.identifier, let identifireCase = ImageGallerySegue(rawValue: identifire) else {
-            assertionFailure("Could not map segue identifire to segue case")
-            return
+            fatalError("Could not map segue identifire to segue case")
+//            return
         }
         
         switch identifireCase {
         case .ShowImageVC:
             let cell = sender as! ImageCollectionViewCell
+//            let componentIndex = imageGalleryCollectionView.indexPath(for: cell)!.item
+//            print("ratio",cellComponents[componentIndex].cellAspectRatio)
             let imageVC = segue.destination as! ImageVC
             imageVC.galleryImage.image = cell.cellImageView.image
-            
         }
     }
 }

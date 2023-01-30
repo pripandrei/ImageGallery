@@ -7,6 +7,20 @@
 
 import UIKit
 
+class ImageCollectionViewCell: UICollectionViewCell {
+    
+    @IBOutlet weak var cellImageView: UIImageView!
+    @IBOutlet weak var spinner: UIActivityIndicatorView!
+
+    var imageUrl: URL? { didSet { setImage() } }
+    
+    var loader = ImageLoader()
+
+//    override func draw(_ rect: CGRect) {
+//        backgroundImageOfCell?.draw(in: bounds)
+//    }
+}
+
 struct CellComponents {
     
     var cellURL: URL?
@@ -29,20 +43,6 @@ struct CellComponents {
     }
 }
 
-class ImageCollectionViewCell: UICollectionViewCell {
-    
-    @IBOutlet weak var cellImageView: UIImageView!
-    @IBOutlet weak var spinner: UIActivityIndicatorView!
-
-    var imageUrl: URL? { didSet { setImage() } }
-    
-    var backgroundImageOfCell: UIImage? { didSet { setNeedsDisplay() } }
-    
-    override func draw(_ rect: CGRect) {
-        backgroundImageOfCell?.draw(in: bounds)
-    }
-}
-
 extension ImageCollectionViewCell
 {
     private func setImage() {
@@ -53,20 +53,14 @@ extension ImageCollectionViewCell
         self.spinner.isHidden = false
         self.spinner.startAnimating()
         
-        DispatchQueue.global(qos: .userInitiated).async
-        {
-            let urlContent = try? Data(contentsOf: url.imageURL)
-            DispatchQueue.main.async { [weak self] in
-                guard let imageData = urlContent else {
-                    return
-                }
+        loader.fetch(url, complitionHandler: { [weak self] image in
+            if let image = image {
                 if self?.imageUrl == url {
-                    self?.cellImageView.image = UIImage(data: imageData)
+                    self?.cellImageView.image = image
                     self?.spinner.isHidden = true
                     self?.spinner.stopAnimating()
                 }
             }
-        }
+        })
     }
 }
-
