@@ -28,7 +28,7 @@ struct GalleryDocument
 
 class ImageGalleryDocumentTableVC: UITableViewController {
     
-    var indexOfpreviousSelectedRow: Int?
+    var indexOfPreviousSelectedRow: Int?
 
     var documents = [GalleryDocument]()
 
@@ -76,9 +76,23 @@ class ImageGalleryDocumentTableVC: UITableViewController {
     
     // MARK: - Table view Delegate
 
-//    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-//
-//    }
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath)
+    {
+        if let currentimageGalleryVC = splitViewDetailImageGalleryVC  {
+            if indexOfPreviousSelectedRow == nil {
+                // By default, when first time images are dragged, they will be set to first item in tableView.
+                // Change 0 to cell.id if you desire to explicitly select item in tableView for saving images in to
+                // however, a good idea in this case will be blocking of drag before creating at least one item in table view
+                // and selecting it
+                indexOfPreviousSelectedRow = 0
+            }
+//                else {
+                documents[indexOfPreviousSelectedRow!].documentComponent = currentimageGalleryVC.cellComponents
+            indexOfPreviousSelectedRow = indexPath.row
+//                }
+        }
+        performSegue(withIdentifier: GalleryDcoumentSegue.ShowImageGalleryVC.rawValue, sender: indexPath)
+    }
 }
 
 // MARK: - Navigation
@@ -98,23 +112,8 @@ extension ImageGalleryDocumentTableVC {
             guard let imageGalleryVC = segue.destination.contents as? ImageGalleryViewController else {
                 return
             }
-            let cell = sender as! DocumentTableCell
-            if let currentimageGalleryVC = splitViewDetailImageGalleryVC  {
-                if indexOfpreviousSelectedRow == nil {
-                    // By default, when first time images are dragged, they will be set to first item in tableView.
-                    // Change 0 to cell.id if you desire to explicitly select item in tableView for saving images in to
-                    // however, a good idea in this case will be blocking of drag before creating at least one item in table view
-                    // and selecting it
-                    indexOfpreviousSelectedRow = 0
-                }
-//                else {
-                    documents[indexOfpreviousSelectedRow!].documentComponent = currentimageGalleryVC.cellComponents
-                    indexOfpreviousSelectedRow = cell.id
-//                }
-            }
-            // id will always be present here, as long as it is set in cellForRowAt function
-            // so we can safely unwrap! here
-            imageGalleryVC.cellComponents = documents[cell.id!].documentComponent
+            let index = (sender as! IndexPath).row
+            imageGalleryVC.cellComponents = documents[index].documentComponent
         }
     }
 }
@@ -138,6 +137,3 @@ extension ImageGalleryDocumentTableVC {
         return possiblyUnique
     }
 }
-
-
-// in prepareForSegue function i can access imageGalerryVC and append collected components from there in the documents array, and also there, i can check if sender as index is already in documents array, if so skipp adding, if it's not add docComppnent
