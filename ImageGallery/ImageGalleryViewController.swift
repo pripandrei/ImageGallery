@@ -9,29 +9,10 @@ import UIKit
 
 class ImageGalleryViewController: UIViewController {
     
+    var galleryDocuments = [GalleryDocument]()
+    
     var cellComponents = [CellComponents]()
     var scaleFactor: CGFloat = 1.0
-
-//    func setImage(to imageCell: ImageCollectionViewCell, using index: Int)
-//    {
-//        guard let url = cellComponents[index].cellURL else {
-//            return
-//        }
-//        DispatchQueue.global(qos: .userInitiated).async
-//        {
-//            let urlContent = try? Data(contentsOf: url.imageURL)
-//            DispatchQueue.main.async {
-//                guard let imageData = urlContent else {
-//                    return
-//                }
-//                if imageCell.identifire == index {
-//                    imageCell.backgroundImageOfCell = UIImage(data: imageData)
-//                    imageCell.spinner.isHidden = true
-//                    imageCell.spinner.stopAnimating()
-//                }
-//            }
-//        }
-//    }
     
     @IBOutlet weak var imageGalleryCollectionView: UICollectionView! {
         didSet {
@@ -209,7 +190,6 @@ extension ImageGalleryViewController {
 
         guard let identifire = segue.identifier, let identifireCase = ImageGallerySegue(rawValue: identifire) else {
             fatalError("Could not map segue identifire to segue case")
-//            return
         }
         
         switch identifireCase {

@@ -132,15 +132,34 @@ extension UIImage
     }
 }
 
+//extension String {
+//    func madeUnique(withRespectTo otherStrings: [String]) -> String {
+//        var possiblyUnique = self
+//        var uniqueNumber = 1
+//        while otherStrings.contains(possiblyUnique) {
+//            possiblyUnique = self + " \(uniqueNumber)"
+//            uniqueNumber += 1
+//        }
+//        return possiblyUnique
+//    }
+//}
+
 extension String {
-    func madeUnique(withRespectTo otherStrings: [String]) -> String {
+    func madeUnique(withRespectToTitlesFrom otherDocuments: [GalleryDocument]) -> String {
         var possiblyUnique = self
         var uniqueNumber = 1
-        while otherStrings.contains(possiblyUnique) {
-            possiblyUnique = self + " \(uniqueNumber)"
-            uniqueNumber += 1
+        otherDocuments.forEach { document in
+            if document.title == possiblyUnique {
+                possiblyUnique = self + " \(uniqueNumber)"
+                uniqueNumber += 1
+            }
         }
         return possiblyUnique
+//        while otherDocuments.contains(possiblyUnique) {
+//            possiblyUnique = self + " \(uniqueNumber)"
+//            uniqueNumber += 1
+//        }
+//        return possiblyUnique
     }
 }
 

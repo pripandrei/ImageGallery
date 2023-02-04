@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="21507" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="FBa-mR-dU5">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="21507" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="wfA-xf-3FA">
     <device id="ipad10_9rounded" orientation="portrait" layout="fullscreen" appearance="light"/>
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="21505"/>
@@ -9,6 +9,57 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
+        <!--Split View Controller-->
+        <scene sceneID="gyf-T4-m8w">
+            <objects>
+                <splitViewController primaryBackgroundStyle="sidebar" id="wfA-xf-3FA" sceneMemberID="viewController">
+                    <connections>
+                        <segue destination="FBa-mR-dU5" kind="relationship" relationship="detailViewController" id="Q4y-p3-g99"/>
+                        <segue destination="qLH-p2-HGE" kind="relationship" relationship="masterViewController" id="75X-wQ-pi3"/>
+                    </connections>
+                </splitViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="cUu-F0-tPG" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-1962" y="-1082"/>
+        </scene>
+        <!--Image Gallery Document TableVC-->
+        <scene sceneID="ESg-aF-FCc">
+            <objects>
+                <tableViewController id="f6L-Rc-N4r" customClass="ImageGalleryDocumentTableVC" customModule="ImageGallery" customModuleProvider="target" sceneMemberID="viewController">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="-1" estimatedSectionFooterHeight="-1" id="mqH-Kf-dhJ">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="1180"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <prototypes>
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="DocumentTableCell" id="TdK-ja-Xh8" customClass="DocumentTableCell" customModule="ImageGallery" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="50" width="320" height="43.5"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="TdK-ja-Xh8" id="6iK-ml-R6n">
+                                    <rect key="frame" x="0.0" y="0.0" width="320" height="43.5"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                </tableViewCellContentView>
+                                <connections>
+                                    <segue destination="FBa-mR-dU5" kind="showDetail" identifier="ShowImageGalleryVC" id="MZN-xC-ARF"/>
+                                </connections>
+                            </tableViewCell>
+                        </prototypes>
+                        <connections>
+                            <outlet property="dataSource" destination="f6L-Rc-N4r" id="1xZ-x7-FrY"/>
+                            <outlet property="delegate" destination="f6L-Rc-N4r" id="M8U-aI-7U2"/>
+                        </connections>
+                    </tableView>
+                    <navigationItem key="navigationItem" id="Obs-ug-pHt">
+                        <barButtonItem key="rightBarButtonItem" systemItem="add" id="8AM-yC-MLp">
+                            <connections>
+                                <action selector="addImageGallery:" destination="f6L-Rc-N4r" id="UI4-bt-8z5"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
+                </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="g98-g6-EIM" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-104.63414634146341" y="-1463.3898305084747"/>
+        </scene>
         <!--Navigation Controller-->
         <scene sceneID="uGG-Jm-Oo5">
             <objects>
@@ -23,7 +74,7 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="bKS-FZ-4TZ" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-1138" y="-634"/>
+            <point key="canvasLocation" x="-1057" y="-634"/>
         </scene>
         <!--Image Gallery View Controller-->
         <scene sceneID="rqA-3t-Pq4">
@@ -120,7 +171,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="uug-9F-k1s" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-289.7560975609756" y="-633.5593220338983"/>
+            <point key="canvasLocation" x="-279" y="-634"/>
         </scene>
         <!--ImageVC-->
         <scene sceneID="g9J-uD-jcu">
@@ -152,7 +203,28 @@
             </objects>
             <point key="canvasLocation" x="477.07317073170731" y="-634.06779661016958"/>
         </scene>
+        <!--Navigation Controller-->
+        <scene sceneID="Xjk-RF-Qkt">
+            <objects>
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="qLH-p2-HGE" sceneMemberID="viewController">
+                    <toolbarItems/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="oXC-Qh-urd">
+                        <rect key="frame" x="0.0" y="24" width="320" height="50"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <nil name="viewControllers"/>
+                    <connections>
+                        <segue destination="f6L-Rc-N4r" kind="relationship" relationship="rootViewController" id="sld-39-Ye9"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="bOk-b7-R4O" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-861.21951219512198" y="-1463.3898305084747"/>
+        </scene>
     </scenes>
+    <inferredMetricsTieBreakers>
+        <segue reference="MZN-xC-ARF"/>
+    </inferredMetricsTieBreakers>
     <resources>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>

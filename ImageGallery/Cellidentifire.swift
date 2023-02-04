@@ -23,3 +23,4 @@ extension ReusableCell {
 
 extension ImageCollectionViewCell: ReusableCell {}
 
+extension DocumentTableCell: ReusableCell {}
