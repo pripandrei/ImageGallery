@@ -7,12 +7,12 @@
 
 import UIKit
 
-struct GalleryDocument
+class GalleryDocument
 {
     static var identifire = 0
     
     var ID: Int
-    var title: String
+    var title: String?
     var documentComponent = [CellComponents()]
     
     private static func generateUniqueId() -> Int  {
@@ -23,6 +23,10 @@ struct GalleryDocument
     init(title: String) {
         self.title = title
         self.ID = GalleryDocument.generateUniqueId()
+    }
+    
+    convenience init() {
+        self.init(title: "")
     }
 }
 
@@ -77,18 +81,18 @@ class ImageGalleryDocumentTableVC: UITableViewController {
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath)
     {
         tableView.deselectRow(at: indexPath, animated: true)
-        if let currentimageGalleryVC = splitViewDetailImageGalleryVC  {
-            if indexOfPreviousSelectedRow == nil {
-                // By default, when first time images are drpped, they will be set to first item in tableView.
-                // Change 0 to cell.id if you desire to explicitly select item in tableView for saving images in to
-                // however, a good idea in this case will be blocking of drag before creating at least one item in table view
-                indexOfPreviousSelectedRow = 0
-            }
-            if documents.indices.contains(indexOfPreviousSelectedRow!) {
-                documents[indexOfPreviousSelectedRow!].documentComponent = currentimageGalleryVC.cellComponents
-            }
-            indexOfPreviousSelectedRow = indexPath.row
-        }
+//        if let currentimageGalleryVC = splitViewDetailImageGalleryVC  {
+//            if indexOfPreviousSelectedRow == nil {
+//                // By default, when first time images are drpped, they will be set to first item in tableView.
+//                // Change 0 to cell.id if you desire to explicitly select item in tableView for saving images in to
+//                // however, a good idea in this case will be blocking of drag before creating at least one item in table view
+//                indexOfPreviousSelectedRow = 0
+//            }
+//            if documents.indices.contains(indexOfPreviousSelectedRow!) {
+//                documents[indexOfPreviousSelectedRow!].documentComponent = currentimageGalleryVC.cellComponents
+//            }
+//            indexOfPreviousSelectedRow = indexPath.row
+//        }
         performSegue(withIdentifier: GalleryDcoumentSegue.ShowImageGalleryVC.rawValue, sender: indexPath)
     }
     
@@ -99,9 +103,9 @@ class ImageGalleryDocumentTableVC: UITableViewController {
             documents.remove(at: indexPath.row)
             tableView.deleteRows(at: [indexPath], with: .fade)
         }
-        if indexPath.row < indexOfPreviousSelectedRow! {
-            indexOfPreviousSelectedRow! -= 1
-        }
+//        if indexPath.row < indexOfPreviousSelectedRow! {
+//            indexOfPreviousSelectedRow! -= 1
+//        }
     }
 }
 
@@ -125,7 +129,7 @@ extension ImageGalleryDocumentTableVC {
                 return
             }
             let index = (sender as! IndexPath).row
-            imageGalleryVC.cellComponents = documents[index].documentComponent
+            imageGalleryVC.galleryDocuments = documents[index]
         }
     }
 }
