@@ -10,6 +10,7 @@ import UIKit
 class DocumentTableCell: UITableViewCell {
 
     var id: Int?
+    var title: String?
     var components = [CellComponents()]
     
 }

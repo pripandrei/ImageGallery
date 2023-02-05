@@ -31,8 +31,6 @@ class ImageGalleryDocumentTableVC: UITableViewController {
     var indexOfPreviousSelectedRow: Int?
 
     var documents = [GalleryDocument]()
-
-//    var galleryDocument = ["Item","Item 1","Item 2"]
     
     var splitViewDetailImageGalleryVC: ImageGalleryViewController? {
         return splitViewController?.viewControllers.last?.contents as? ImageGalleryViewController
@@ -78,22 +76,36 @@ class ImageGalleryDocumentTableVC: UITableViewController {
 
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath)
     {
+        tableView.deselectRow(at: indexPath, animated: true)
         if let currentimageGalleryVC = splitViewDetailImageGalleryVC  {
             if indexOfPreviousSelectedRow == nil {
-                // By default, when first time images are dragged, they will be set to first item in tableView.
+                // By default, when first time images are drpped, they will be set to first item in tableView.
                 // Change 0 to cell.id if you desire to explicitly select item in tableView for saving images in to
                 // however, a good idea in this case will be blocking of drag before creating at least one item in table view
-                // and selecting it
                 indexOfPreviousSelectedRow = 0
             }
-//                else {
+            if documents.indices.contains(indexOfPreviousSelectedRow!) {
                 documents[indexOfPreviousSelectedRow!].documentComponent = currentimageGalleryVC.cellComponents
+            }
             indexOfPreviousSelectedRow = indexPath.row
-//                }
         }
         performSegue(withIdentifier: GalleryDcoumentSegue.ShowImageGalleryVC.rawValue, sender: indexPath)
     }
+    
+    // MARK: - Cell deletion
+    
+    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+        if editingStyle == .delete {
+            documents.remove(at: indexPath.row)
+            tableView.deleteRows(at: [indexPath], with: .fade)
+        }
+        if indexPath.row < indexOfPreviousSelectedRow! {
+            indexOfPreviousSelectedRow! -= 1
+        }
+    }
 }
+
+
 
 // MARK: - Navigation
 extension ImageGalleryDocumentTableVC {
