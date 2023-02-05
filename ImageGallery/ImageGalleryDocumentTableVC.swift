@@ -7,13 +7,13 @@
 
 import UIKit
 
-class GalleryDocument
+struct GalleryDocument
 {
     static var identifire = 0
     
     var ID: Int
     var title: String?
-    var documentComponent = [CellComponents()]
+    var documentComponents = [CellComponents()]
     
     private static func generateUniqueId() -> Int  {
         identifire += 1
@@ -24,15 +24,11 @@ class GalleryDocument
         self.title = title
         self.ID = GalleryDocument.generateUniqueId()
     }
-    
-    convenience init() {
-        self.init(title: "")
-    }
 }
 
 class ImageGalleryDocumentTableVC: UITableViewController {
     
-    var indexOfPreviousSelectedRow: Int?
+    var previousDocumentID: Int?
 
     var documents = [GalleryDocument]()
     
@@ -48,7 +44,6 @@ class ImageGalleryDocumentTableVC: UITableViewController {
     }
     
     @IBAction func addImageGallery(_ sender: UIBarButtonItem) {
-//        galleryDocument += ["Item".madeUnique(withRespectTo: galleryDocument)]
         let title = makeUniqueTitle()
         documents.append(GalleryDocument(title: title))
         tableView.reloadData()
@@ -70,7 +65,7 @@ class ImageGalleryDocumentTableVC: UITableViewController {
             fatalError("Unable to dequeu reusable cell")
         }
         
-        cell.id = indexPath.row
+//        cell.id = indexPath.row
         cell.textLabel?.text = documents[indexPath.row].title
         
         return cell
@@ -81,18 +76,19 @@ class ImageGalleryDocumentTableVC: UITableViewController {
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath)
     {
         tableView.deselectRow(at: indexPath, animated: true)
-//        if let currentimageGalleryVC = splitViewDetailImageGalleryVC  {
-//            if indexOfPreviousSelectedRow == nil {
-//                // By default, when first time images are drpped, they will be set to first item in tableView.
-//                // Change 0 to cell.id if you desire to explicitly select item in tableView for saving images in to
-//                // however, a good idea in this case will be blocking of drag before creating at least one item in table view
-//                indexOfPreviousSelectedRow = 0
-//            }
-//            if documents.indices.contains(indexOfPreviousSelectedRow!) {
-//                documents[indexOfPreviousSelectedRow!].documentComponent = currentimageGalleryVC.cellComponents
-//            }
-//            indexOfPreviousSelectedRow = indexPath.row
-//        }
+        if let currentimageGalleryVC = splitViewDetailImageGalleryVC  {
+            if previousDocumentID == nil {
+                // By default, when first time images are drpped, they will be set to first item in tableView.
+                // Change 0 to cell.id if you desire to explicitly select item in tableView for saving images in to
+                // however, a good idea in this case will be blocking of drag before creating at least one item in table view
+                previousDocumentID = 1
+            }
+            for (index,document) in documents.enumerated() {
+                if document.ID == self.previousDocumentID {
+                    documents[index].documentComponents = currentimageGalleryVC.cellComponents
+                }
+            }
+        }
         performSegue(withIdentifier: GalleryDcoumentSegue.ShowImageGalleryVC.rawValue, sender: indexPath)
     }
     
@@ -103,13 +99,8 @@ class ImageGalleryDocumentTableVC: UITableViewController {
             documents.remove(at: indexPath.row)
             tableView.deleteRows(at: [indexPath], with: .fade)
         }
-//        if indexPath.row < indexOfPreviousSelectedRow! {
-//            indexOfPreviousSelectedRow! -= 1
-//        }
     }
 }
-
-
 
 // MARK: - Navigation
 extension ImageGalleryDocumentTableVC {
@@ -129,11 +120,11 @@ extension ImageGalleryDocumentTableVC {
                 return
             }
             let index = (sender as! IndexPath).row
-            imageGalleryVC.galleryDocuments = documents[index]
+            previousDocumentID = documents[index].ID
+            imageGalleryVC.cellComponents = documents[index].documentComponents
         }
     }
 }
-
 
 // MARK: - Helpers
 

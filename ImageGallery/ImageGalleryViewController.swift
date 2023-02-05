@@ -8,9 +8,7 @@
 import UIKit
 
 class ImageGalleryViewController: UIViewController {
-    
-    var galleryDocuments = GalleryDocument()
-    
+
     var cellComponents = [CellComponents]()
     var scaleFactor: CGFloat = 1.0
     
@@ -30,7 +28,7 @@ class ImageGalleryViewController: UIViewController {
 extension ImageGalleryViewController: UICollectionViewDataSource
 {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return galleryDocuments.documentComponent.count
+        return cellComponents.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
@@ -38,8 +36,8 @@ extension ImageGalleryViewController: UICollectionViewDataSource
                 as? ImageCollectionViewCell else {
             fatalError("Unable to dequeu reusable cell")
         }
-        print("TITLE", galleryDocuments.title)
-        cell.imageUrl = galleryDocuments.documentComponent[indexPath.item].cellURL
+        
+        cell.imageUrl = cellComponents[indexPath.item].cellURL
     
         return cell
     }
@@ -72,7 +70,7 @@ extension ImageGalleryViewController: UICollectionViewDragDelegate
             return []
         }
         let dragItem = UIDragItem(itemProvider: NSItemProvider(object: image))
-        dragItem.localObject = galleryDocuments.documentComponent[indexPath.item]
+        dragItem.localObject = cellComponents[indexPath.item]
         return [dragItem]
     }
 }
@@ -103,8 +101,8 @@ extension ImageGalleryViewController: UICollectionViewDropDelegate {
                 continue
             }
             collectionView.performBatchUpdates({
-                let removedImgCell = galleryDocuments.documentComponent.remove(at: sourceIndexPath.item)
-                galleryDocuments.documentComponent.insert(removedImgCell, at: destinationIndexPath.item)
+                let removedImgCell = cellComponents.remove(at: sourceIndexPath.item)
+                cellComponents.insert(removedImgCell, at: destinationIndexPath.item)
                 collectionView.deleteItems(at: [sourceIndexPath])
                 collectionView.insertItems(at: [destinationIndexPath])
             })
@@ -119,12 +117,12 @@ extension ImageGalleryViewController: UICollectionViewDropDelegate {
         let placeHolder = coordinator.drop(item.dragItem, to: UICollectionViewDropPlaceholder(insertionIndexPath: destinationIndexPath, reuseIdentifier: ImageCollectionViewCellPlaceholder.identifire))
         let newComponent = CellComponents()
         
-        galleryDocuments.documentComponent.insert(newComponent, at: destinationIndexPath.item)
+        cellComponents.insert(newComponent, at: destinationIndexPath.item)
         
         coordinator.session.loadObjects(ofClass: UIImage.self, completion: { image in
                 // review option of setting image to weak (in case some one will want to delete image before it arrives )
             if let image = image.first as? UIImage {
-                self.galleryDocuments.documentComponent[destinationIndexPath.item].cellAspectRatio = image.size
+                self.cellComponents[destinationIndexPath.item].cellAspectRatio = image.size
             }
         })
         
@@ -135,7 +133,7 @@ extension ImageGalleryViewController: UICollectionViewDropDelegate {
                         return
                     }
                     placeHolder.commitInsertion(dataSourceUpdates: { insertionIndexPath in
-                        self.galleryDocuments.documentComponent[destinationIndexPath.item].cellURL = url
+                        self.cellComponents[destinationIndexPath.item].cellURL = url
                     })
                 }
         })
@@ -172,7 +170,7 @@ extension ImageGalleryViewController: UICollectionViewDelegateFlowLayout
     {
 //        if let cell = collectionView.cellForItem(at: indexPath) as? ImageCollectionViewCell { cell.setNeedsDisplay() }
         (collectionView.cellForItem(at: indexPath) as? ImageCollectionViewCell)?.setNeedsDisplay()
-        let cellAspectRatio = galleryDocuments.documentComponent[indexPath.item].cellAspectRatio
+        let cellAspectRatio = cellComponents[indexPath.item].cellAspectRatio
         let scaledSize = CGSize(width: cellAspectRatio.width * scaleFactor, height: cellAspectRatio.height * scaleFactor)
         return scaledSize
     }
