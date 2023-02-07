@@ -28,11 +28,11 @@ struct GalleryDocument
 
 class ImageGalleryDocumentTableVC: UITableViewController {
     
-    var previousDocumentID: Int?
+    private var previousDocumentID: Int?
 
-    var documents = [GalleryDocument]()
+    private var documents = [GalleryDocument]()
     
-    var splitViewDetailImageGalleryVC: ImageGalleryViewController? {
+    private var splitViewDetailImageGalleryVC: ImageGalleryViewController? {
         return splitViewController?.viewControllers.last?.contents as? ImageGalleryViewController
     }
 
@@ -50,7 +50,7 @@ class ImageGalleryDocumentTableVC: UITableViewController {
     }
     
 
-    // MARK: - Table view data source
+    // MARK: - TableViewDataSource
 
     override func numberOfSections(in tableView: UITableView) -> Int {
         return 1
@@ -71,7 +71,7 @@ class ImageGalleryDocumentTableVC: UITableViewController {
         return cell
     }
     
-    // MARK: - Table view Delegate
+    // MARK: - TableViewDelegate
 
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath)
     {
@@ -79,7 +79,7 @@ class ImageGalleryDocumentTableVC: UITableViewController {
         if let currentimageGalleryVC = splitViewDetailImageGalleryVC  {
             if previousDocumentID == nil {
                 // By default, when first time images are drpped, they will be set to first item in tableView.
-                // Change 0 to cell.id if you desire to explicitly select item in tableView for saving images in to
+                // Remove this block if you desire to explicitly select item in tableView for saving images in to
                 // however, a good idea in this case will be blocking of drag before creating at least one item in table view
                 previousDocumentID = 1
             }
@@ -103,6 +103,7 @@ class ImageGalleryDocumentTableVC: UITableViewController {
 }
 
 // MARK: - Navigation
+
 extension ImageGalleryDocumentTableVC {
     
     enum GalleryDcoumentSegue: String {
@@ -120,8 +121,8 @@ extension ImageGalleryDocumentTableVC {
                 return
             }
             let index = (sender as! IndexPath).row
-            previousDocumentID = documents[index].ID
             imageGalleryVC.cellComponents = documents[index].documentComponents
+            previousDocumentID = documents[index].ID
         }
     }
 }
