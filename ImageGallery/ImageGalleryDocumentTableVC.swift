@@ -30,7 +30,7 @@ class ImageGalleryDocumentTableVC: UITableViewController {
     
     private var previousDocumentID: Int?
 
-    private var documents = [GalleryDocument]()
+    private var documents: [[GalleryDocument]] = [[]]
     
     private var splitViewDetailImageGalleryVC: ImageGalleryViewController? {
         return splitViewController?.viewControllers.last?.contents as? ImageGalleryViewController
@@ -45,19 +45,27 @@ class ImageGalleryDocumentTableVC: UITableViewController {
     
     @IBAction func addImageGallery(_ sender: UIBarButtonItem) {
         let title = makeUniqueTitle()
-        documents.append(GalleryDocument(title: title))
+        documents[0].append(GalleryDocument(title: title))
         tableView.reloadData()
     }
     
-
+    var deletedDocuments = [GalleryDocument]()
+    
     // MARK: - TableViewDataSource
 
     override func numberOfSections(in tableView: UITableView) -> Int {
-        return 1
+//        if deletedDocuments.isEmpty {
+//            return 1
+//        }
+
+        return documents.count
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return documents.count
+//        if section == 0 {
+//            return documents.count
+//        }
+        return documents[section].count
     }
    
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -65,8 +73,11 @@ class ImageGalleryDocumentTableVC: UITableViewController {
             fatalError("Unable to dequeu reusable cell")
         }
         
-//        cell.id = indexPath.row
-        cell.textLabel?.text = documents[indexPath.row].title
+//        if indexPath.section == 0 {
+            cell.textLabel?.text = documents[indexPath.section][indexPath.row].title
+//        } else {
+//            cell.textLabel?.text = deletedDocuments[indexPath.row].title
+//        }
         
         return cell
     }
@@ -76,16 +87,16 @@ class ImageGalleryDocumentTableVC: UITableViewController {
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath)
     {
         tableView.deselectRow(at: indexPath, animated: true)
-        if let currentimageGalleryVC = splitViewDetailImageGalleryVC  {
+        if let currentimageGalleryVC = splitViewDetailImageGalleryVC, indexPath.section == 0 {
             if previousDocumentID == nil {
-                // By default, when first time images are drpped, they will be set to first item in tableView.
+                // By default, when first time images are dropped, they will be set to first item in tableView.
                 // Remove this block if you desire to explicitly select item in tableView for saving images in to
                 // however, a good idea in this case will be blocking of drag before creating at least one item in table view
                 previousDocumentID = 1
             }
-            for (index,document) in documents.enumerated() {
+            for (index,document) in documents[0].enumerated() {
                 if document.ID == self.previousDocumentID {
-                    documents[index].documentComponents = currentimageGalleryVC.cellComponents
+                    documents[0][index].documentComponents = currentimageGalleryVC.cellComponents
                 }
             }
         }
@@ -96,11 +107,42 @@ class ImageGalleryDocumentTableVC: UITableViewController {
     
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
-            documents.remove(at: indexPath.row)
+            let removedDocument = documents[indexPath.section].remove(at: indexPath.row)
             tableView.deleteRows(at: [indexPath], with: .fade)
+            
+            if indexPath.section == 0 {
+                if documents.count == 1 {
+                    documents.append([removedDocument])
+                } else {
+                    documents[1].append(removedDocument)
+                }
+            }
+            if indexPath.section == 1, documents[1].count == 0 {
+                documents.remove(at: 1)
+            }
+            tableView.reloadData()
         }
     }
+    
+    override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+        if section == 1 {
+            return "Recently Deleted"
+        }
+        return ""
+    }
+    
 }
+
+//extension Array where Self == [GalleryDocument] {
+//    mutating func customRemove(at index: Int) -> Element {
+//        let removedElement = self.remove(at: index)
+//
+//        if self.count == 0 {
+//            remove(at: 1)
+//        }
+//        return removedElement
+//    }
+//}
 
 // MARK: - Navigation
 
@@ -120,9 +162,10 @@ extension ImageGalleryDocumentTableVC {
             guard let imageGalleryVC = segue.destination.contents as? ImageGalleryViewController else {
                 return
             }
-            let index = (sender as! IndexPath).row
-            imageGalleryVC.cellComponents = documents[index].documentComponents
-            previousDocumentID = documents[index].ID
+            let rowIndex = (sender as! IndexPath).row
+            let sectionIndex = (sender as! IndexPath).section
+            imageGalleryVC.cellComponents = documents[sectionIndex][rowIndex].documentComponents
+            previousDocumentID = documents[sectionIndex][rowIndex].ID
         }
     }
 }
@@ -136,7 +179,7 @@ extension ImageGalleryDocumentTableVC {
         var possiblyUnique = initialTitle
         var uniqueNumber = 1
         
-        documents.forEach { document in
+        documents[0].forEach { document in
             if document.title == possiblyUnique {
                 possiblyUnique = initialTitle + " \(uniqueNumber)"
                 uniqueNumber += 1
