@@ -120,7 +120,6 @@ extension ImageGalleryViewController: UICollectionViewDropDelegate {
         cellComponents.insert(newComponent, at: destinationIndexPath.item)
         
         coordinator.session.loadObjects(ofClass: UIImage.self, completion: { image in
-                // review option of setting image to weak (in case some one will want to delete image before it arrives )
             if let image = image.first as? UIImage {
                 self.cellComponents[destinationIndexPath.item].cellAspectRatio = image.size
             }

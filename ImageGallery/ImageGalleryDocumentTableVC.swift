@@ -99,27 +99,19 @@ class ImageGalleryDocumentTableVC: UITableViewController {
                     documents[0][index].documentComponents = currentimageGalleryVC.cellComponents
                 }
             }
+            performSegue(withIdentifier: GalleryDcoumentSegue.ShowImageGalleryVC.rawValue, sender: indexPath)
         }
-        performSegue(withIdentifier: GalleryDcoumentSegue.ShowImageGalleryVC.rawValue, sender: indexPath)
     }
     
     // MARK: - Cell deletion
+    
     
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
             let removedDocument = documents[indexPath.section].remove(at: indexPath.row)
             tableView.deleteRows(at: [indexPath], with: .fade)
             
-            if indexPath.section == 0 {
-                if documents.count == 1 {
-                    documents.append([removedDocument])
-                } else {
-                    documents[1].append(removedDocument)
-                }
-            }
-            if indexPath.section == 1, documents[1].count == 0 {
-                documents.remove(at: 1)
-            }
+            handleDeletion(of: removedDocument, on: indexPath)
             tableView.reloadData()
         }
     }
@@ -129,6 +121,19 @@ class ImageGalleryDocumentTableVC: UITableViewController {
             return "Recently Deleted"
         }
         return ""
+    }
+    
+    private func handleDeletion(of document: GalleryDocument, on indexPath: IndexPath) {
+        if indexPath.section == 0 {
+            if documents.count == 1 {
+                documents.append([document])
+            } else {
+                documents[1].append(document)
+            }
+        }
+        if indexPath.section == 1, documents[1].count == 0 {
+            documents.remove(at: 1)
+        }
     }
     
 }
@@ -177,14 +182,22 @@ extension ImageGalleryDocumentTableVC {
     private func makeUniqueTitle() -> String {
         let initialTitle = "Item"
         var possiblyUnique = initialTitle
-        var uniqueNumber = 1
+        var uniqueNumber = 0
         
-        documents[0].forEach { document in
-            if document.title == possiblyUnique {
-                possiblyUnique = initialTitle + " \(uniqueNumber)"
-                uniqueNumber += 1
-            }
-        }
+        var duplicateTitle = true
+        
+        repeat {
+            uniqueNumber += 1
+            possiblyUnique = initialTitle + " \(uniqueNumber)"
+            duplicateTitle = documents[0].contains(where: { $0.title == possiblyUnique })
+        } while duplicateTitle == true
+        
+//        documents[0].forEach { document in
+//            if document.title == possiblyUnique {
+//                possiblyUnique = initialTitle + " \(uniqueNumber)"
+//                uniqueNumber += 1
+//            }
+//        }
         return possiblyUnique
     }
 }
