@@ -92,16 +92,55 @@ class ImageGalleryDocumentTableVC: UITableViewController,UISplitViewControllerDe
     
     // MARK: - Cell deletion
     
-    
-    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
-        if editingStyle == .delete {
-            let removedDocument = documents[indexPath.section].remove(at: indexPath.row)
+    override func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+        
+        let deleteAction = UIContextualAction(style: .destructive, title: "Delete") { [weak self] _, _, complitionHandler in
+            guard let removedDocument = self?.documents[indexPath.section].remove(at: indexPath.row) else {
+                fatalError("Could not remove the document")
+            }
             tableView.deleteRows(at: [indexPath], with: .fade)
-            
-            handleDeletion(of: removedDocument, at: indexPath)
+
+            self?.handleDeletion(of: removedDocument, at: indexPath)
             tableView.reloadData()
         }
+        
+        let configuration = UISwipeActionsConfiguration(actions: [deleteAction])
+        return configuration
     }
+    
+    override func tableView(_ tableView: UITableView, leadingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+        
+        if indexPath.section == 1 {
+            let recoverAction = UIContextualAction(style: .normal, title: "Recover", handler: { [weak self] _, _, complitionHandler in
+                let recoveredDocument = self?.documents[indexPath.section].remove(at: indexPath.row)
+                tableView.deleteRows(at: [indexPath], with: .fade)
+                self?.documents[0].append(recoveredDocument!)
+                // incorporate this
+                if indexPath.section == 1, self?.documents[1].count == 0 {
+                    self?.documents.remove(at: 1)
+                }
+                
+                tableView.reloadData()
+            })
+            recoverAction.backgroundColor = .green
+            
+            let configuration = UISwipeActionsConfiguration(actions: [recoverAction])
+            return configuration
+        }
+            return UISwipeActionsConfiguration(actions: [])
+    }
+    
+    
+    
+//    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+//        if editingStyle == .delete {
+//            let removedDocument = documents[indexPath.section].remove(at: indexPath.row)
+//            tableView.deleteRows(at: [indexPath], with: .fade)
+//
+//            handleDeletion(of: removedDocument, at: indexPath)
+//            tableView.reloadData()
+//        }
+//    }
     
     override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         if section == 1 {
