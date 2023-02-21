@@ -12,6 +12,7 @@ class ImageGalleryViewController: UIViewController {
     var cellComponents = [CellComponents]()
     var scaleFactor: CGFloat = 1.0
     
+
     @IBOutlet weak var imageGalleryCollectionView: UICollectionView! {
         didSet {
             imageGalleryCollectionView.dataSource = self
@@ -38,7 +39,7 @@ extension ImageGalleryViewController: UICollectionViewDataSource
         }
         
         cell.imageUrl = cellComponents[indexPath.item].cellURL
-    
+        
         return cell
     }
 }

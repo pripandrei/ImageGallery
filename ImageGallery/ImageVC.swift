@@ -30,10 +30,25 @@ class ImageVC: UIViewController, UIScrollViewDelegate {
         }
     }
     
+    var customTableView: UITableView? {
+        return (splitViewController?.viewControllers.first?.contents as? ImageGalleryDocumentTableVC)?.tableView
+    }
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        image = galleryImage.image
+        splitViewController?.presentsWithGesture = false
+    }
+    
     override func viewWillLayoutSubviews() {
         super.viewWillLayoutSubviews()
         self.view.layoutSubviews()
         adjustContentSizeToBeCentered()
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        splitViewController?.presentsWithGesture = true
     }
     
     private func adjustContentSizeToBeCentered() {
@@ -48,11 +63,6 @@ class ImageVC: UIViewController, UIScrollViewDelegate {
     
     func scrollViewDidZoom(_ scrollView: UIScrollView) {
         adjustContentSizeToBeCentered()
-    }
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        image = galleryImage.image
     }
     
     @IBOutlet weak var scrollView: UIScrollView! {

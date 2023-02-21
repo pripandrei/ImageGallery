@@ -26,7 +26,7 @@ struct GalleryDocument
     }
 }
 
-class ImageGalleryDocumentTableVC: UITableViewController {
+class ImageGalleryDocumentTableVC: UITableViewController,UISplitViewControllerDelegate {
     
     private var previousDocumentID: Int?
 
@@ -38,11 +38,11 @@ class ImageGalleryDocumentTableVC: UITableViewController {
 
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        if  splitViewController?.preferredDisplayMode != .oneOverSecondary {
-            splitViewController?.preferredDisplayMode = .oneOverSecondary
+        if  splitViewController?.preferredDisplayMode != .secondaryOnly {
+            splitViewController?.preferredDisplayMode = .secondaryOnly
         }
     }
-    
+
     @IBAction func addImageGallery(_ sender: UIBarButtonItem) {
         let title = makeUniqueTitle()
         documents[0].append(GalleryDocument(title: title))
@@ -54,17 +54,10 @@ class ImageGalleryDocumentTableVC: UITableViewController {
     // MARK: - TableViewDataSource
 
     override func numberOfSections(in tableView: UITableView) -> Int {
-//        if deletedDocuments.isEmpty {
-//            return 1
-//        }
-
         return documents.count
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-//        if section == 0 {
-//            return documents.count
-//        }
         return documents[section].count
     }
    
@@ -72,13 +65,7 @@ class ImageGalleryDocumentTableVC: UITableViewController {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: DocumentTableCell.identifire, for: indexPath) as? DocumentTableCell else {
             fatalError("Unable to dequeu reusable cell")
         }
-        
-//        if indexPath.section == 0 {
-            cell.textLabel?.text = documents[indexPath.section][indexPath.row].title
-//        } else {
-//            cell.textLabel?.text = deletedDocuments[indexPath.row].title
-//        }
-        
+        cell.textLabel?.text = documents[indexPath.section][indexPath.row].title
         return cell
     }
     
@@ -111,7 +98,7 @@ class ImageGalleryDocumentTableVC: UITableViewController {
             let removedDocument = documents[indexPath.section].remove(at: indexPath.row)
             tableView.deleteRows(at: [indexPath], with: .fade)
             
-            handleDeletion(of: removedDocument, on: indexPath)
+            handleDeletion(of: removedDocument, at: indexPath)
             tableView.reloadData()
         }
     }
@@ -123,7 +110,7 @@ class ImageGalleryDocumentTableVC: UITableViewController {
         return ""
     }
     
-    private func handleDeletion(of document: GalleryDocument, on indexPath: IndexPath) {
+    private func handleDeletion(of document: GalleryDocument, at indexPath: IndexPath) {
         if indexPath.section == 0 {
             if documents.count == 1 {
                 documents.append([document])
