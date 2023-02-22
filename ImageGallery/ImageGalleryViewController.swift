@@ -11,7 +11,6 @@ class ImageGalleryViewController: UIViewController {
 
     var cellComponents = [CellComponents]()
     var scaleFactor: CGFloat = 1.0
-    
 
     @IBOutlet weak var imageGalleryCollectionView: UICollectionView! {
         didSet {
@@ -95,7 +94,7 @@ extension ImageGalleryViewController: UICollectionViewDropDelegate {
     func collectionView(_ collectionView: UICollectionView, performDropWith coordinator: UICollectionViewDropCoordinator)
     {
         let destinationIndexPath = coordinator.destinationIndexPath ?? IndexPath(item: 0, section: 0)
-
+        
         for item in coordinator.items {
             guard let sourceIndexPath = item.sourceIndexPath else {
                 handleDropFromGlobalSource(with: item, usingCoordinator: coordinator)

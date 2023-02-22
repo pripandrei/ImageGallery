@@ -19,7 +19,7 @@ struct GalleryDocument
         identifire += 1
         return identifire
     }
-    
+
     init(title: String) {
         self.title = title
         self.ID = GalleryDocument.generateUniqueId()
@@ -92,35 +92,41 @@ class ImageGalleryDocumentTableVC: UITableViewController,UISplitViewControllerDe
     
     // MARK: - Cell deletion
     
-    override func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
-        
+    override func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration?
+    {
         let deleteAction = UIContextualAction(style: .destructive, title: "Delete") { [weak self] _, _, complitionHandler in
-            guard let removedDocument = self?.documents[indexPath.section].remove(at: indexPath.row) else {
-                fatalError("Could not remove the document")
-            }
+            guard let self = self else { return }
+            
+            let removedDocument = self.documents[indexPath.section].remove(at: indexPath.row)
             tableView.deleteRows(at: [indexPath], with: .fade)
 
-            self?.handleDeletion(of: removedDocument, at: indexPath)
+            self.handleDeletion(of: removedDocument, at: indexPath)
             tableView.reloadData()
+            complitionHandler(true)
         }
         
         let configuration = UISwipeActionsConfiguration(actions: [deleteAction])
         return configuration
     }
     
-    override func tableView(_ tableView: UITableView, leadingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
-        
+    override func tableView(_ tableView: UITableView, leadingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration?
+    {
         if indexPath.section == 1 {
             let recoverAction = UIContextualAction(style: .normal, title: "Recover", handler: { [weak self] _, _, complitionHandler in
-                let recoveredDocument = self?.documents[indexPath.section].remove(at: indexPath.row)
-                tableView.deleteRows(at: [indexPath], with: .fade)
-                self?.documents[0].append(recoveredDocument!)
-                // incorporate this
-                if indexPath.section == 1, self?.documents[1].count == 0 {
-                    self?.documents.remove(at: 1)
-                }
+                guard let self = self else { return }
                 
+                let recoveredDocument = self.documents[indexPath.section].remove(at: indexPath.row)
+                tableView.deleteRows(at: [indexPath], with: .fade)
+//                recoveredDocument.title = self.makeUniqueTitle()
+//                self.documents[0].insert(recoveredDocument, at: recoveredDocument.ID - 1)
+                self.documents[0].append(recoveredDocument)
+                
+                // TODO: incoroprat this is a more elegant way
+                if indexPath.section == 1, self.documents[1].count == 0 {
+                    self.documents.remove(at: 1)
+                }
                 tableView.reloadData()
+                complitionHandler(true)
             })
             recoverAction.backgroundColor = .green
             
@@ -203,27 +209,90 @@ extension ImageGalleryDocumentTableVC {
 
 // MARK: - Helpers
 
+extension String {
+    func madeUnique(withRespectTo otherStrings: [String]) -> String {
+        var possiblyUnique = self
+        var uniqueNumber = 1
+        
+        
+        while otherStrings.contains(possiblyUnique) {
+            possiblyUnique = self + " \(uniqueNumber)"
+            uniqueNumber += 1
+        }
+        return possiblyUnique
+    }
+}
+
 extension ImageGalleryDocumentTableVC {
     
     private func makeUniqueTitle() -> String {
         let initialTitle = "Item"
         var possiblyUnique = initialTitle
-        var uniqueNumber = 0
+        var uniqueNumber = 1
+        var combinedDocs: [GalleryDocument]?
         
-        var duplicateTitle = true
-        
-        repeat {
-            uniqueNumber += 1
+        combinedDocs = documents.count > 1 ? documents[0] + documents[1] : documents[0]
+        while combinedDocs!.contains(where: { $0.title == possiblyUnique}) {
             possiblyUnique = initialTitle + " \(uniqueNumber)"
-            duplicateTitle = documents[0].contains(where: { $0.title == possiblyUnique })
-        } while duplicateTitle == true
+            uniqueNumber += 1
+        }
         
-//        documents[0].forEach { document in
+//        let sortedDocs = combinedDocs != nil ? combinedDocs!.sorted(by: { $0.title!.extractNumber() < $1.title!.extractNumber() }) : documents[0].sorted(by: { $0.title!.extractNumber() < $1.title!.extractNumber() })
+////        let sortedDocs = documents[0].sorted(by: { $0.ID < $1.ID })
+//
+////        if let last = sortedDocs.last?.ID {
+////            possiblyUnique = "Item \(last)"
+////        }
+//
+//        for document in sortedDocs {
+////            document in
 //            if document.title == possiblyUnique {
 //                possiblyUnique = initialTitle + " \(uniqueNumber)"
 //                uniqueNumber += 1
+//            } else {
+//                break
 //            }
 //        }
+//
+//        repeat {
+       //            uniqueNumber += 1
+       //            possiblyUnique = initialTitle + " \(uniqueNumber)"
+       //            duplicateTitle = documents[0].contains(where: { $0.title == possiblyUnique })
+       //        } while duplicateTitle == true
+
+               // We sort this array couse at some point a doc with a title can be deleted and then added again
+       //        // which will go to the end and not to the index it was before deletion
+       //        var combined: [GalleryDocument]?
+       //        if documents.count > 1 {
+       //            combined = documents[0] + documents[1]
+       //        }
+       //        combined = documents.count > 1 ? documents[0] + documents[1] : nil
+       //        combined = combined != nil ? combined!.sorted(by: { $0.ID < $1.ID }) : documents[0].sorted(by: { $0.ID < $1.ID })
+//        possiblyUnique = "\(sortedDocs.last!.ID + 1)"
+//        for document in sortedDocs {
+//            if document.ID >= uniqueNumber {
+//                possiblyUnique = "Item \(document.ID + 1)"
+//                uniqueNumber += 1
+//            }
+//        }
+    
         return possiblyUnique
     }
 }
+
+extension String {
+    func extractNumber() -> Int {
+        guard let number = Int(self.components(separatedBy: CharacterSet.decimalDigits.inverted).joined()) else {
+           return 0
+        }
+        return number
+    }
+}
+
+
+//let initialTitle = "Item"
+//var possiblyUnique = initialTitle
+//if let id = documents[0].last?.ID {
+//    possiblyUnique = initialTitle + " \(id)"
+//}
+
