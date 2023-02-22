@@ -32,6 +32,8 @@ class ImageGalleryDocumentTableVC: UITableViewController,UISplitViewControllerDe
 
     private var documents: [[GalleryDocument]] = [[]]
     
+    private var indexPathsForSelectedRows: [IndexPath]?
+    
     private var splitViewDetailImageGalleryVC: ImageGalleryViewController? {
         return splitViewController?.viewControllers.last?.contents as? ImageGalleryViewController
     }
@@ -42,7 +44,12 @@ class ImageGalleryDocumentTableVC: UITableViewController,UISplitViewControllerDe
             splitViewController?.preferredDisplayMode = .secondaryOnly
         }
     }
-
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        clearsSelectionOnViewWillAppear = false
+    }
+ 
     @IBAction func addImageGallery(_ sender: UIBarButtonItem) {
         let title = makeUniqueTitle()
         documents[0].append(GalleryDocument(title: title))
@@ -73,7 +80,7 @@ class ImageGalleryDocumentTableVC: UITableViewController,UISplitViewControllerDe
 
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath)
     {
-        tableView.deselectRow(at: indexPath, animated: true)
+        tableView.selectRow(at: indexPath, animated: true, scrollPosition: .none)
         if let currentimageGalleryVC = splitViewDetailImageGalleryVC, indexPath.section == 0 {
             if previousDocumentID == nil {
                 // By default, when first time images are dropped, they will be set to first item in tableView.
@@ -87,6 +94,16 @@ class ImageGalleryDocumentTableVC: UITableViewController,UISplitViewControllerDe
                 }
             }
             performSegue(withIdentifier: GalleryDcoumentSegue.ShowImageGalleryVC.rawValue, sender: indexPath)
+        }
+    }
+    
+    // Keeps selected row after editing
+    override func setEditing(_ editing: Bool, animated: Bool) {
+        super.setEditing(editing, animated: animated)
+        if editing {
+            indexPathsForSelectedRows = tableView.indexPathsForSelectedRows
+        } else {
+            indexPathsForSelectedRows?.forEach { tableView.selectRow(at: $0, animated: true, scrollPosition: .none) }
         }
     }
     
@@ -117,8 +134,6 @@ class ImageGalleryDocumentTableVC: UITableViewController,UISplitViewControllerDe
                 
                 let recoveredDocument = self.documents[indexPath.section].remove(at: indexPath.row)
                 tableView.deleteRows(at: [indexPath], with: .fade)
-//                recoveredDocument.title = self.makeUniqueTitle()
-//                self.documents[0].insert(recoveredDocument, at: recoveredDocument.ID - 1)
                 self.documents[0].append(recoveredDocument)
                 
                 // TODO: incoroprat this is a more elegant way
@@ -237,62 +252,15 @@ extension ImageGalleryDocumentTableVC {
             uniqueNumber += 1
         }
         
-//        let sortedDocs = combinedDocs != nil ? combinedDocs!.sorted(by: { $0.title!.extractNumber() < $1.title!.extractNumber() }) : documents[0].sorted(by: { $0.title!.extractNumber() < $1.title!.extractNumber() })
-////        let sortedDocs = documents[0].sorted(by: { $0.ID < $1.ID })
-//
-////        if let last = sortedDocs.last?.ID {
-////            possiblyUnique = "Item \(last)"
-////        }
-//
-//        for document in sortedDocs {
-////            document in
-//            if document.title == possiblyUnique {
-//                possiblyUnique = initialTitle + " \(uniqueNumber)"
-//                uniqueNumber += 1
-//            } else {
-//                break
-//            }
-//        }
-//
-//        repeat {
-       //            uniqueNumber += 1
-       //            possiblyUnique = initialTitle + " \(uniqueNumber)"
-       //            duplicateTitle = documents[0].contains(where: { $0.title == possiblyUnique })
-       //        } while duplicateTitle == true
-
-               // We sort this array couse at some point a doc with a title can be deleted and then added again
-       //        // which will go to the end and not to the index it was before deletion
-       //        var combined: [GalleryDocument]?
-       //        if documents.count > 1 {
-       //            combined = documents[0] + documents[1]
-       //        }
-       //        combined = documents.count > 1 ? documents[0] + documents[1] : nil
-       //        combined = combined != nil ? combined!.sorted(by: { $0.ID < $1.ID }) : documents[0].sorted(by: { $0.ID < $1.ID })
-//        possiblyUnique = "\(sortedDocs.last!.ID + 1)"
-//        for document in sortedDocs {
-//            if document.ID >= uniqueNumber {
-//                possiblyUnique = "Item \(document.ID + 1)"
-//                uniqueNumber += 1
-//            }
-//        }
-    
         return possiblyUnique
     }
 }
 
-extension String {
-    func extractNumber() -> Int {
-        guard let number = Int(self.components(separatedBy: CharacterSet.decimalDigits.inverted).joined()) else {
-           return 0
-        }
-        return number
-    }
-}
-
-
-//let initialTitle = "Item"
-//var possiblyUnique = initialTitle
-//if let id = documents[0].last?.ID {
-//    possiblyUnique = initialTitle + " \(id)"
+//extension String {
+//    func extractNumber() -> Int {
+//        guard let number = Int(self.components(separatedBy: CharacterSet.decimalDigits.inverted).joined()) else {
+//           return 0
+//        }
+//        return number
+//    }
 //}
-
