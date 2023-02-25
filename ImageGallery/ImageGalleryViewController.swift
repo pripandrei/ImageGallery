@@ -21,6 +21,22 @@ class ImageGalleryViewController: UIViewController {
             addImageGalleryGestureRecognizers(to: imageGalleryCollectionView)
         }
     }
+    
+    private func configureTrashButton() {
+        let trashButton = UIButton(type: .system)
+        let image = UIImage(systemName: "trash")
+        let dropInteraction = UIDropInteraction(delegate: self)
+        trashButton.frame = CGRect(origin: CGPoint(x: 0.0, y: 0.0), size: CGSize(width: 45.0, height: 45.0))
+        trashButton.setImage(image, for: .normal)
+        navigationItem.rightBarButtonItem = UIBarButtonItem(customView: trashButton)
+        trashButton.isSpringLoaded = true
+        trashButton.addInteraction(dropInteraction)
+    }
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        configureTrashButton()
+    }
 }
 
 //MARK: - UICollectionViewDataSource
@@ -174,6 +190,16 @@ extension ImageGalleryViewController: UICollectionViewDelegateFlowLayout
         return scaledSize
     }
 }
+
+// MARK: - UIDropInteractionDelegate
+
+extension ImageGalleryViewController: UIDropInteractionDelegate {
+ 
+    func dropInteraction(_ interaction: UIDropInteraction, canHandle session: UIDropSession) -> Bool {
+        return session.hasItemsConforming(toTypeIdentifiers: ["public.image"])
+    }
+}
+
 
 //MARK: - Navigation
 
