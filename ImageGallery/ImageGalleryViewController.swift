@@ -39,6 +39,34 @@ class ImageGalleryViewController: UIViewController {
     }
 }
 
+// MARK: - UIDropInteractionDelegate
+
+extension ImageGalleryViewController: UIDropInteractionDelegate {
+ 
+    func dropInteraction(_ interaction: UIDropInteraction, canHandle session: UIDropSession) -> Bool {
+        return session.hasItemsConforming(toTypeIdentifiers: ["public.image"])
+//        return session.canLoadObjects(ofClass: UIImage.self)
+    }
+    
+    func dropInteraction(_ interaction: UIDropInteraction, sessionDidUpdate session: UIDropSession) -> UIDropProposal {
+        return UIDropProposal(operation: .move)
+    }
+    
+    func dropInteraction(_ interaction: UIDropInteraction, performDrop session: UIDropSession) {
+        for item in session.items {
+            guard let cellComponent = item.localObject as? CellComponents else {
+                return
+            }
+            imageGalleryCollectionView.performBatchUpdates({
+                let index = cellComponents.firstIndex(of: cellComponent)
+                cellComponents.remove(at: index!)
+                imageGalleryCollectionView.deleteItems(at: [IndexPath(item: index!, section: 0)])
+            })
+        }
+    }
+}
+
+
 //MARK: - UICollectionViewDataSource
 
 extension ImageGalleryViewController: UICollectionViewDataSource
@@ -190,16 +218,6 @@ extension ImageGalleryViewController: UICollectionViewDelegateFlowLayout
         return scaledSize
     }
 }
-
-// MARK: - UIDropInteractionDelegate
-
-extension ImageGalleryViewController: UIDropInteractionDelegate {
- 
-    func dropInteraction(_ interaction: UIDropInteraction, canHandle session: UIDropSession) -> Bool {
-        return session.hasItemsConforming(toTypeIdentifiers: ["public.image"])
-    }
-}
-
 
 //MARK: - Navigation
 

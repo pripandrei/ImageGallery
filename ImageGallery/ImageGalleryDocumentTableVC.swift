@@ -85,7 +85,7 @@ class ImageGalleryDocumentTableVC: UITableViewController,UISplitViewControllerDe
             if previousDocumentID == nil {
                 // By default, when first time images are dropped, they will be set to first item in tableView.
                 // Remove this block if you desire to explicitly select item in tableView for saving images in to
-                // however, a good idea in this case will be blocking of drag before creating at least one item in table view
+                // however, a good idea in this case will be blocking of drag&drop before creating at least one item in table view
                 previousDocumentID = 1
             }
             for (index,document) in documents[0].enumerated() {
@@ -136,7 +136,7 @@ class ImageGalleryDocumentTableVC: UITableViewController,UISplitViewControllerDe
                 tableView.deleteRows(at: [indexPath], with: .fade)
                 self.documents[0].append(recoveredDocument)
                 
-                // TODO: incoroprat this is a more elegant way
+                // TODO: incoroprat this in a more elegant way
                 if indexPath.section == 1, self.documents[1].count == 0 {
                     self.documents.remove(at: 1)
                 }

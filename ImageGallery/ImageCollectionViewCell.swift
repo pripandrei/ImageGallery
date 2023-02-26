@@ -21,7 +21,7 @@ class ImageCollectionViewCell: UICollectionViewCell {
 //    }
 }
 
-struct CellComponents {
+struct CellComponents: Equatable {
     
     var cellURL: URL?
     var cellSize: CGSize?
