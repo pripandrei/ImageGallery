@@ -177,8 +177,7 @@ class ImageGalleryDocumentTableVC: UITableViewController,UISplitViewControllerDe
             } else {
                 documents[1].append(document)
             }
-        }
-        if indexPath.section == 1, documents[1].count == 0 {
+        } else if documents[1].count == 0 {
             documents.remove(at: 1)
         }
     }
@@ -229,7 +228,6 @@ extension String {
         var possiblyUnique = self
         var uniqueNumber = 1
         
-        
         while otherStrings.contains(possiblyUnique) {
             possiblyUnique = self + " \(uniqueNumber)"
             uniqueNumber += 1
@@ -251,7 +249,6 @@ extension ImageGalleryDocumentTableVC {
             possiblyUnique = initialTitle + " \(uniqueNumber)"
             uniqueNumber += 1
         }
-        
         return possiblyUnique
     }
 }

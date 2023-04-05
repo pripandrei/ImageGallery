@@ -54,13 +54,12 @@ extension ImageGalleryViewController: UIDropInteractionDelegate {
     
     func dropInteraction(_ interaction: UIDropInteraction, performDrop session: UIDropSession) {
         for item in session.items {
-            guard let cellComponent = item.localObject as? CellComponents else {
+            guard let indexPath = item.localObject as? IndexPath else {
                 return
             }
             imageGalleryCollectionView.performBatchUpdates({
-                let index = cellComponents.firstIndex(of: cellComponent)
-                cellComponents.remove(at: index!)
-                imageGalleryCollectionView.deleteItems(at: [IndexPath(item: index!, section: 0)])
+                cellComponents.remove(at: indexPath.item)
+                imageGalleryCollectionView.deleteItems(at: [indexPath])
             })
         }
     }
@@ -111,10 +110,10 @@ extension ImageGalleryViewController: UICollectionViewDragDelegate
     
     private func dragItem(at indexPath: IndexPath) -> [UIDragItem] {
         guard let image = (imageGalleryCollectionView.cellForItem(at: indexPath) as? ImageCollectionViewCell)?.cellImageView.image else {
-            return []
+            return [] 
         }
         let dragItem = UIDragItem(itemProvider: NSItemProvider(object: image))
-        dragItem.localObject = cellComponents[indexPath.item]
+        dragItem.localObject = indexPath
         return [dragItem]
     }
 }

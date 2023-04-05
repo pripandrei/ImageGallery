@@ -13,4 +13,8 @@ class DocumentTableCell: UITableViewCell {
     var title: String?
     var components = [CellComponents()]
     
+    override func awakeFromNib() {
+        super.awakeFromNib()
+        
+    }
 }

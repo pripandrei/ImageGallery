@@ -14,8 +14,8 @@ extension ImageGalleryViewController {
         collectionView.isUserInteractionEnabled = true
         let pinch = UIPinchGestureRecognizer(target: self, action: #selector(resizeCollectionView(by:)))
         collectionView.addGestureRecognizer(pinch)
+        
     }
-    
     
     @objc func resizeCollectionView(by recognizer: UIPinchGestureRecognizer) {
         switch recognizer.state {
