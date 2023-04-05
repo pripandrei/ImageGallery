@@ -73,6 +73,7 @@ class ImageGalleryDocumentTableVC: UITableViewController,UISplitViewControllerDe
             fatalError("Unable to dequeu reusable cell")
         }
         cell.textLabel?.text = documents[indexPath.section][indexPath.row].title
+        tableView.selectRow(at: indexPathsForSelectedRows?.first, animated: true, scrollPosition: .none)
         return cell
     }
     
@@ -80,7 +81,9 @@ class ImageGalleryDocumentTableVC: UITableViewController,UISplitViewControllerDe
 
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath)
     {
-        tableView.selectRow(at: indexPath, animated: true, scrollPosition: .none)
+        
+//        tableView.selectRow(at: indexPath, animated: true, scrollPosition: .none)
+        indexPathsForSelectedRows = [indexPath]
         if let currentimageGalleryVC = splitViewDetailImageGalleryVC, indexPath.section == 0 {
             if previousDocumentID == nil {
                 // By default, when first time images are dropped, they will be set to first item in tableView.
@@ -100,9 +103,8 @@ class ImageGalleryDocumentTableVC: UITableViewController,UISplitViewControllerDe
     // Keeps selected row after editing
     override func setEditing(_ editing: Bool, animated: Bool) {
         super.setEditing(editing, animated: animated)
-        if editing {
-            indexPathsForSelectedRows = tableView.indexPathsForSelectedRows
-        } else {
+        if !editing {
+//            indexPathsForSelectedRows = tableView.indexPathsForSelectedRows
             indexPathsForSelectedRows?.forEach { tableView.selectRow(at: $0, animated: true, scrollPosition: .none) }
         }
     }
@@ -118,6 +120,15 @@ class ImageGalleryDocumentTableVC: UITableViewController,UISplitViewControllerDe
             tableView.deleteRows(at: [indexPath], with: .fade)
 
             self.handleDeletion(of: removedDocument, at: indexPath)
+            
+            // Handles row selection after deletion
+            self.indexPathsForSelectedRows?.forEach { index in
+                if indexPath.row == index.row {
+                    self.indexPathsForSelectedRows = nil
+                } else {
+                    self.indexPathsForSelectedRows![0] = IndexPath(item: indexPath.row > index.row ? index.row : index.row - 1, section: 0)
+                }
+            }
             tableView.reloadData()
             complitionHandler(true)
         }
