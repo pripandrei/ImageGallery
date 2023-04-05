@@ -104,7 +104,6 @@ class ImageGalleryDocumentTableVC: UITableViewController,UISplitViewControllerDe
     override func setEditing(_ editing: Bool, animated: Bool) {
         super.setEditing(editing, animated: animated)
         if !editing {
-//            indexPathsForSelectedRows = tableView.indexPathsForSelectedRows
             indexPathsForSelectedRows?.forEach { tableView.selectRow(at: $0, animated: true, scrollPosition: .none) }
         }
     }
@@ -126,7 +125,7 @@ class ImageGalleryDocumentTableVC: UITableViewController,UISplitViewControllerDe
                 if indexPath.row == index.row {
                     self.indexPathsForSelectedRows = nil
                 } else {
-                    self.indexPathsForSelectedRows![0] = IndexPath(item: indexPath.row > index.row ? index.row : index.row - 1, section: 0)
+                    self.indexPathsForSelectedRows![0] = IndexPath(item: indexPath.row > index.row ? index.row : index.row - 1, section: indexPath.section)
                 }
             }
             tableView.reloadData()
