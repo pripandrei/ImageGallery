@@ -58,38 +58,8 @@ class ImageGalleryDocumentTableVC: UITableViewController,UISplitViewControllerDe
     
     var deletedDocuments = [GalleryDocument]()
     
+    private var indexPathOfCellToBeEdited: IndexPath?
     
-    // MARK: - Gestures
-    
-    
-    @objc func singleTap() {
-        print("tapped once")
-        guard let indexPath = tableView.indexPathsForSelectedRows?.first else {
-            return
-        }
-        indexPathsForSelectedRows = [indexPath]
-        
-        if let currentimageGalleryVC = splitViewDetailImageGalleryVC, indexPath.section == 0 {
-            if previousDocumentID == nil {
-                // By default, when first time images are dropped, they will be set to first item in tableView.
-                // Remove this block if you desire to explicitly select item in tableView for saving images in to
-                // however, a good idea in this case will be blocking of drag&drop before creating at least one item in table view
-                previousDocumentID = 1
-            }
-            for (index,document) in documents[0].enumerated() {
-                if document.ID == self.previousDocumentID {
-                    documents[0][index].documentComponents = currentimageGalleryVC.cellComponents
-                }
-            }
-        }
-        performSegue(withIdentifier: GalleryDcoumentSegue.ShowImageGalleryVC.rawValue, sender: nil)
-    }
-    
-    @objc func doubleTap() {
-        print("tapped twice")
-    }
-    
-
     
     // MARK: - TableViewDataSource
 
@@ -102,22 +72,41 @@ class ImageGalleryDocumentTableVC: UITableViewController,UISplitViewControllerDe
     }
    
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: DocumentTableCell.identifire, for: indexPath) as? DocumentTableCell else {
-            fatalError("Unable to dequeu reusable cell")
+        
+        if indexPath == indexPathOfCellToBeEdited {
+            guard let cell = tableView.dequeueReusableCell(withIdentifier: "TextEditingCell", for: indexPath) as? TextFieldTableViewCell else {
+                fatalError("Unable to dequeu reusable TextEditingCell")
+            }
+            print("Dequed cell")
+            return cell
+        } else {
+            guard let cell = tableView.dequeueReusableCell(withIdentifier: DocumentTableCell.identifire, for: indexPath) as? DocumentTableCell else {
+                fatalError("Unable to dequeu reusable DocumentTableCell")
+            }
+            
+            cell.imageGalleryDocumentTableVC = self
+            cell.textLabel?.text = documents[indexPath.section][indexPath.row].title
+            tableView.selectRow(at: indexPathsForSelectedRows?.first, animated: false, scrollPosition: .none)
+            return cell
         }
-    
-        cell.imageGalleryDocumentTableVC = self 
-        cell.textLabel?.text = documents[indexPath.section][indexPath.row].title
-        tableView.selectRow(at: indexPathsForSelectedRows?.first, animated: true, scrollPosition: .none)
-        return cell
     }
+    
+//    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+//        
+//    }
     
     // MARK: - TableViewDelegate
-//
-    
-    override func tableView(_ tableView: UITableView, willSelectRowAt indexPath: IndexPath) -> IndexPath? {
-        return indexPath
+
+    override func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        if let textFieldCell = cell as? TextFieldTableViewCell {
+            textFieldCell.textField.becomeFirstResponder()
+        }
     }
+    
+//    override func tableView(_ tableView: UITableView, willSelectRowAt indexPath: IndexPath) -> IndexPath? {
+//        return indexPath
+//    }
+
 //
 //    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath)
 //    {
@@ -148,6 +137,40 @@ class ImageGalleryDocumentTableVC: UITableViewController,UISplitViewControllerDe
             indexPathsForSelectedRows?.forEach { tableView.selectRow(at: $0, animated: true, scrollPosition: .none) }
         }
     }
+    
+    // MARK: - Gestures
+    
+    @objc func handleSingleCellTap() {
+        print("tapped once")
+        
+        guard let indexPath = tableView.indexPathsForSelectedRows?.first else {
+            return
+        }
+//        tableView.selectRow(at: indexPath, animated: true, scrollPosition: .none)
+        indexPathsForSelectedRows = [indexPath]
+        
+        if let currentimageGalleryVC = splitViewDetailImageGalleryVC, indexPath.section == 0 {
+            if previousDocumentID == nil {
+                // By default, when first time images are dropped, they will be set to first item in tableView.
+                // Remove this block if you desire to explicitly select item in tableView for saving images in to
+                // however, a good idea in this case will be blocking of drag&drop before creating at least one item in table view
+                previousDocumentID = 1
+            }
+            for (index,document) in documents[0].enumerated() {
+                if document.ID == self.previousDocumentID {
+                    documents[0][index].documentComponents = currentimageGalleryVC.cellComponents
+                }
+            }
+        }
+        performSegue(withIdentifier: GalleryDcoumentSegue.ShowImageGalleryVC.rawValue, sender: nil)
+    }
+    
+    @objc func handleDoubleCellTap() {
+        print("tapped twice")
+        indexPathOfCellToBeEdited = tableView.indexPathsForSelectedRows?.first
+        tableView.reloadData()
+    }
+    
     
     // MARK: - Cell deletion
     

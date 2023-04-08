@@ -22,6 +22,7 @@
 		7539C57D298915A5002E5731 /* DocumentTableCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7539C57C298915A5002E5731 /* DocumentTableCell.swift */; };
 		753F9F54297D807E003487ED /* ImageGalleryGestures.swift in Sources */ = {isa = PBXBuildFile; fileRef = 753F9F53297D807E003487ED /* ImageGalleryGestures.swift */; };
 		754D137E297EE045006C6FFD /* ImageVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 754D137D297EE045006C6FFD /* ImageVC.swift */; };
+		75A01E1429E20E1500D283F6 /* TextFieldTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75A01E1329E20E1500D283F6 /* TextFieldTableViewCell.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -42,6 +43,7 @@
 		7539C57C298915A5002E5731 /* DocumentTableCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocumentTableCell.swift; sourceTree = "<group>"; };
 		753F9F53297D807E003487ED /* ImageGalleryGestures.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageGalleryGestures.swift; sourceTree = "<group>"; };
 		754D137D297EE045006C6FFD /* ImageVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageVC.swift; sourceTree = "<group>"; };
+		75A01E1329E20E1500D283F6 /* TextFieldTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextFieldTableViewCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -84,6 +86,7 @@
 				753F9F53297D807E003487ED /* ImageGalleryGestures.swift */,
 				75168368296EC73F00DA5637 /* ImageView.swift */,
 				75168359296EBDC800DA5637 /* Main.storyboard */,
+				75A01E1329E20E1500D283F6 /* TextFieldTableViewCell.swift */,
 				7516835C296EBDC900DA5637 /* Assets.xcassets */,
 				7516835E296EBDC900DA5637 /* LaunchScreen.storyboard */,
 				75168367296EC1D300DA5637 /* Supporting Files */,
@@ -179,6 +182,7 @@
 				751683712971898F00DA5637 /* ImageCollectionViewCell.swift in Sources */,
 				7539C5772984176F002E5731 /* Cellidentifire.swift in Sources */,
 				75168354296EBDC800DA5637 /* AppDelegate.swift in Sources */,
+				75A01E1429E20E1500D283F6 /* TextFieldTableViewCell.swift in Sources */,
 				754D137E297EE045006C6FFD /* ImageVC.swift in Sources */,
 				7516836F29707D1900DA5637 /* ImageGalleryViewController.swift in Sources */,
 				7539C57B2989124F002E5731 /* ImageGalleryDocumentTableVC.swift in Sources */,

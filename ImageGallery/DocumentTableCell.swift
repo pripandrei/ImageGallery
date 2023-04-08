@@ -28,11 +28,11 @@ class DocumentTableCell: UITableViewCell {
     }
 
     func addCellGestureRecognizers(_ cell: UITableViewCell) {
-        let singleTap = UITapGestureRecognizer(target: imageGalleryDocumentTableVC, action: #selector(imageGalleryDocumentTableVC?.singleTap))
+        let singleTap = UITapGestureRecognizer(target: imageGalleryDocumentTableVC, action: #selector(imageGalleryDocumentTableVC?.handleSingleCellTap))
         singleTap.numberOfTapsRequired = 1
         self.addGestureRecognizer(singleTap)
         
-        let doubleTap = UITapGestureRecognizer(target: imageGalleryDocumentTableVC, action: #selector(imageGalleryDocumentTableVC?.doubleTap))
+        let doubleTap = UITapGestureRecognizer(target: imageGalleryDocumentTableVC, action: #selector(imageGalleryDocumentTableVC?.handleDoubleCellTap))
         doubleTap.numberOfTapsRequired = 2
         self.addGestureRecognizer(doubleTap)
         
