@@ -13,9 +13,18 @@ class TextFieldTableViewCell: UITableViewCell, UITextFieldDelegate {
     @IBOutlet weak var textField: UITextField! {
         didSet {
             textField.delegate = self
-            textField.bounds = self.contentView.bounds
         }
     }
     
+    var resignetionHandler: (() -> (Void))?
+    
+    func textFieldDidEndEditing(_ textField: UITextField) {
+        resignetionHandler?()
+    }
+    
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        textField.resignFirstResponder()
+        return true
+    }
     
 }

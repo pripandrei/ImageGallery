@@ -77,6 +77,15 @@ class ImageGalleryDocumentTableVC: UITableViewController,UISplitViewControllerDe
             guard let cell = tableView.dequeueReusableCell(withIdentifier: "TextEditingCell", for: indexPath) as? TextFieldTableViewCell else {
                 fatalError("Unable to dequeu reusable TextEditingCell")
             }
+            cell.textField.text = documents[0][indexPath.row].title
+            
+            cell.resignetionHandler = { [weak self, unowned cell] in
+                if let text = cell.textField.text {
+                    self?.documents[0][indexPath.row].title = text
+                }
+                self?.indexPathOfCellToBeEdited = nil
+                self?.tableView.reloadData()
+            }
             print("Dequed cell")
             return cell
         } else {

@@ -39,23 +39,23 @@
                                     <autoresizingMask key="autoresizingMask"/>
                                 </tableViewCellContentView>
                             </tableViewCell>
-                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationLevel="30" indentationWidth="10" reuseIdentifier="TextEditingCell" id="vRf-Vm-eo7" customClass="TextFieldTableViewCell" customModule="ImageGallery" customModuleProvider="target">
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="TextEditingCell" id="vRf-Vm-eo7" customClass="TextFieldTableViewCell" customModule="ImageGallery" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="93.5" width="320" height="43.5"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="vRf-Vm-eo7" id="eLR-cn-b1X">
                                     <rect key="frame" x="0.0" y="0.0" width="320" height="43.5"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
-                                        <textField opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="248" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="PD0-zf-6oh">
-                                            <rect key="frame" x="111" y="5" width="97" height="34"/>
+                                        <textField opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="248" contentHorizontalAlignment="left" contentVerticalAlignment="center" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="PD0-zf-6oh">
+                                            <rect key="frame" x="16" y="9" width="97" height="25.5"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="20"/>
                                             <textInputTraits key="textInputTraits"/>
                                         </textField>
                                     </subviews>
                                     <constraints>
-                                        <constraint firstItem="PD0-zf-6oh" firstAttribute="leading" secondItem="eLR-cn-b1X" secondAttribute="leading" constant="111" id="F9f-g9-Baq"/>
-                                        <constraint firstAttribute="trailing" secondItem="PD0-zf-6oh" secondAttribute="trailing" constant="112" id="hUL-Vg-I6B"/>
-                                        <constraint firstItem="PD0-zf-6oh" firstAttribute="centerY" secondItem="eLR-cn-b1X" secondAttribute="centerY" id="kMA-1q-Eca"/>
+                                        <constraint firstItem="PD0-zf-6oh" firstAttribute="leading" secondItem="eLR-cn-b1X" secondAttribute="leading" constant="16" id="1TI-hd-DQg"/>
+                                        <constraint firstItem="PD0-zf-6oh" firstAttribute="centerY" secondItem="eLR-cn-b1X" secondAttribute="centerY" id="U1s-YQ-f1o"/>
+                                        <constraint firstAttribute="trailing" secondItem="PD0-zf-6oh" secondAttribute="trailing" constant="207" id="isf-Rw-O3D"/>
                                     </constraints>
                                 </tableViewCellContentView>
                                 <connections>

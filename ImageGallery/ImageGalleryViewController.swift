@@ -31,6 +31,7 @@ class ImageGalleryViewController: UIViewController {
         navigationItem.rightBarButtonItem = UIBarButtonItem(customView: trashButton)
         trashButton.isSpringLoaded = true
         trashButton.addInteraction(dropInteraction)
+//        trashButton.addTarget(self, action: #selector(testAction), for: .touchUpInside)
     }
     
     override func viewDidLoad() {
