@@ -7,7 +7,7 @@
 
 import UIKit
 
-struct GalleryDocument
+class GalleryDocument: Codable
 {
     static var identifire = 0
     
@@ -24,9 +24,15 @@ struct GalleryDocument
         self.title = title
         self.ID = GalleryDocument.generateUniqueId()
     }
+    
+    convenience init() {
+        self.init(title: "")
+    }
 }
 
 class ImageGalleryDocumentTableVC: UITableViewController,UISplitViewControllerDelegate {
+    
+    private let defaults = UserDefaults(suiteName: "com.eiedeesehighiokkkjhu76iujh3ru.com")!
     
     private var previousDocumentID: Int?
 
@@ -48,12 +54,35 @@ class ImageGalleryDocumentTableVC: UITableViewController,UISplitViewControllerDe
     override func viewDidLoad() {
         super.viewDidLoad()
         clearsSelectionOnViewWillAppear = false
+//        if let decodedData = defaults.value(forKey: Keys.document) {
+//            if let decodedDocument = try? decoder.decode([[GalleryDocument]].self, from: decodedData as! Data) {
+//                documents = decodedDocument
+//            }
+//        }
+//        documents = defaults.value(forKey: Keys.document) as? [[GalleryDocument]] ?? [[]]
+        
+        if let savedDocument = defaults.object(forKey: Keys.document) as? Data {
+            if let loadedDocument = try? decoder.decode([[GalleryDocument]].self, from: savedDocument) {
+                documents = loadedDocument
+            }
+        }
     }
- 
+    private let decoder = JSONDecoder()
+    private let encoder = JSONEncoder()
+    
+    
     @IBAction func addImageGallery(_ sender: UIBarButtonItem) {
         let title = makeUniqueTitle()
         documents[0].append(GalleryDocument(title: title))
         tableView.reloadData()
+//        if let endocedData = try? encoder.encode(documents) {
+//            defaults.setValue(endocedData, forKey: Keys.document)
+//        }
+
+        if let encoded = try? encoder.encode(documents) {
+            defaults.setValue(encoded, forKey: Keys.document)
+        }
+//        defaults.setValue(previousDocumentID, forKey: Keys.document)
     }
     
     var deletedDocuments = [GalleryDocument]()
@@ -74,19 +103,18 @@ class ImageGalleryDocumentTableVC: UITableViewController,UISplitViewControllerDe
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
         if indexPath == indexPathOfCellToBeEdited {
-            guard let cell = tableView.dequeueReusableCell(withIdentifier: "TextEditingCell", for: indexPath) as? TextFieldTableViewCell else {
+            guard let cell = tableView.dequeueReusableCell(withIdentifier: TextEditingCell.identifire, for: indexPath) as? TextFieldTableViewCell else {
                 fatalError("Unable to dequeu reusable TextEditingCell")
             }
             cell.textField.text = documents[0][indexPath.row].title
             
-            cell.resignetionHandler = { [weak self, unowned cell] in
+            cell.resignationHandler = { [weak self, unowned cell] in
                 if let text = cell.textField.text {
                     self?.documents[0][indexPath.row].title = text
                 }
                 self?.indexPathOfCellToBeEdited = nil
                 self?.tableView.reloadData()
             }
-            print("Dequed cell")
             return cell
         } else {
             guard let cell = tableView.dequeueReusableCell(withIdentifier: DocumentTableCell.identifire, for: indexPath) as? DocumentTableCell else {
@@ -99,11 +127,7 @@ class ImageGalleryDocumentTableVC: UITableViewController,UISplitViewControllerDe
             return cell
         }
     }
-    
-//    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-//        
-//    }
-    
+
     // MARK: - TableViewDelegate
 
     override func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
@@ -111,33 +135,6 @@ class ImageGalleryDocumentTableVC: UITableViewController,UISplitViewControllerDe
             textFieldCell.textField.becomeFirstResponder()
         }
     }
-    
-//    override func tableView(_ tableView: UITableView, willSelectRowAt indexPath: IndexPath) -> IndexPath? {
-//        return indexPath
-//    }
-
-//
-//    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath)
-//    {
-////        tableView.selectRow(at: indexPath, animated: true, scrollPosition: .none)
-//        indexPathsForSelectedRows = [indexPath]
-//        if let currentimageGalleryVC = splitViewDetailImageGalleryVC, indexPath.section == 0 {
-//            if previousDocumentID == nil {
-//                // By default, when first time images are dropped, they will be set to first item in tableView.
-//                // Remove this block if you desire to explicitly select item in tableView for saving images in to
-//                // however, a good idea in this case will be blocking of drag&drop before creating at least one item in table view
-//                previousDocumentID = 1
-//            }
-//            for (index,document) in documents[0].enumerated() {
-//                if document.ID == self.previousDocumentID {
-//                    documents[0][index].documentComponents = currentimageGalleryVC.cellComponents
-//                }
-//            }
-//            performSegue(withIdentifier: GalleryDcoumentSegue.ShowImageGalleryVC.rawValue, sender: indexPath)
-//        }
-//    }
-    
-    
     
     // Keeps selected row after editing
     override func setEditing(_ editing: Bool, animated: Bool) {
@@ -155,7 +152,6 @@ class ImageGalleryDocumentTableVC: UITableViewController,UISplitViewControllerDe
         guard let indexPath = tableView.indexPathsForSelectedRows?.first else {
             return
         }
-//        tableView.selectRow(at: indexPath, animated: true, scrollPosition: .none)
         indexPathsForSelectedRows = [indexPath]
         
         if let currentimageGalleryVC = splitViewDetailImageGalleryVC, indexPath.section == 0 {
@@ -179,7 +175,6 @@ class ImageGalleryDocumentTableVC: UITableViewController,UISplitViewControllerDe
         indexPathOfCellToBeEdited = tableView.indexPathsForSelectedRows?.first
         tableView.reloadData()
     }
-    
     
     // MARK: - Cell deletion
     
@@ -342,6 +337,12 @@ extension ImageGalleryDocumentTableVC {
         }
         return possiblyUnique
     }
+}
+
+// MARK: - User default keys
+
+struct Keys {
+    static let document = "document"
 }
 
 //extension String {

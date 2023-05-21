@@ -11,9 +11,11 @@ protocol ReusableCell {
     static var identifire: String { get }
 }
 
-// MARK: - Identifires for reusable Cells
+// MARK: - Identifires for reusable cells
 
 class ImageCollectionViewCellPlaceholder: ReusableCell {}
+
+class TextEditingCell: ReusableCell {}
 
 extension ReusableCell {
     static var identifire: String {

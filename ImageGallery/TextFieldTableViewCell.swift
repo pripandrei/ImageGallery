@@ -9,17 +9,16 @@ import UIKit
 
 class TextFieldTableViewCell: UITableViewCell, UITextFieldDelegate {
 
-
     @IBOutlet weak var textField: UITextField! {
         didSet {
             textField.delegate = self
         }
     }
     
-    var resignetionHandler: (() -> (Void))?
+    var resignationHandler: (() -> (Void))?
     
     func textFieldDidEndEditing(_ textField: UITextField) {
-        resignetionHandler?()
+        resignationHandler?()
     }
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
@@ -27,4 +26,10 @@ class TextFieldTableViewCell: UITableViewCell, UITextFieldDelegate {
         return true
     }
     
+}
+
+
+struct GaflleryDocument: Codable {
+    // Your GalleryDocument implementation
+    // ...
 }

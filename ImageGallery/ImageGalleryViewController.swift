@@ -8,6 +8,8 @@
 import UIKit
 
 class ImageGalleryViewController: UIViewController {
+    
+    var galleryDocuments = GalleryDocument()
 
     var cellComponents = [CellComponents]()
     var scaleFactor: CGFloat = 1.0
@@ -80,7 +82,7 @@ extension ImageGalleryViewController: UICollectionViewDataSource
                 as? ImageCollectionViewCell else {
             fatalError("Unable to dequeu reusable cell")
         }
-        
+        print("====",galleryDocuments.documentComponents)
         cell.imageUrl = cellComponents[indexPath.item].cellURL
         
         return cell
