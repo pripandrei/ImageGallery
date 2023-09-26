@@ -29,7 +29,4 @@ class TextFieldTableViewCell: UITableViewCell, UITextFieldDelegate {
 }
 
 
-struct GaflleryDocument: Codable {
-    // Your GalleryDocument implementation
-    // ...
-}
+struct GaflleryDocument: Codable {}
