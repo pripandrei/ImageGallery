@@ -7,29 +7,6 @@
 
 import UIKit
 
-class GalleryDocument: Codable
-{
-    static var identifire = 0
-    
-    var ID: Int
-    var title: String?
-    var documentComponents = [CellComponents()]
-    
-    private static func generateUniqueId() -> Int  {
-        identifire += 1
-        return identifire
-    }
-
-    init(title: String) {
-        self.title = title
-        self.ID = GalleryDocument.generateUniqueId()
-    }
-    
-    convenience init() {
-        self.init(title: "")
-    }
-}
-
 class ImageGalleryDocumentTableVC: UITableViewController,UISplitViewControllerDelegate {
     
     private let defaults = UserDefaults(suiteName: "com.eiedeesehighiokkkjhu76iujh3ru.com")!
@@ -54,12 +31,6 @@ class ImageGalleryDocumentTableVC: UITableViewController,UISplitViewControllerDe
     override func viewDidLoad() {
         super.viewDidLoad()
         clearsSelectionOnViewWillAppear = false
-//        if let decodedData = defaults.value(forKey: Keys.document) {
-//            if let decodedDocument = try? decoder.decode([[GalleryDocument]].self, from: decodedData as! Data) {
-//                documents = decodedDocument
-//            }
-//        }
-//        documents = defaults.value(forKey: Keys.document) as? [[GalleryDocument]] ?? [[]]
         
         if let savedDocument = defaults.object(forKey: Keys.document) as? Data {
             if let loadedDocument = try? decoder.decode([[GalleryDocument]].self, from: savedDocument) {
@@ -75,14 +46,10 @@ class ImageGalleryDocumentTableVC: UITableViewController,UISplitViewControllerDe
         let title = makeUniqueTitle()
         documents[0].append(GalleryDocument(title: title))
         tableView.reloadData()
-//        if let endocedData = try? encoder.encode(documents) {
-//            defaults.setValue(endocedData, forKey: Keys.document)
-//        }
-
+        
         if let encoded = try? encoder.encode(documents) {
             defaults.setValue(encoded, forKey: Keys.document)
         }
-//        defaults.setValue(previousDocumentID, forKey: Keys.document)
     }
     
     var deletedDocuments = [GalleryDocument]()
@@ -229,18 +196,6 @@ class ImageGalleryDocumentTableVC: UITableViewController,UISplitViewControllerDe
             return UISwipeActionsConfiguration(actions: [])
     }
     
-    
-    
-//    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
-//        if editingStyle == .delete {
-//            let removedDocument = documents[indexPath.section].remove(at: indexPath.row)
-//            tableView.deleteRows(at: [indexPath], with: .fade)
-//
-//            handleDeletion(of: removedDocument, at: indexPath)
-//            tableView.reloadData()
-//        }
-//    }
-    
     override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         if section == 1 {
             return "Recently Deleted"
@@ -262,16 +217,6 @@ class ImageGalleryDocumentTableVC: UITableViewController,UISplitViewControllerDe
     
 }
 
-//extension Array where Self == [GalleryDocument] {
-//    mutating func customRemove(at index: Int) -> Element {
-//        let removedElement = self.remove(at: index)
-//
-//        if self.count == 0 {
-//            remove(at: 1)
-//        }
-//        return removedElement
-//    }
-//}
 
 // MARK: - Navigation
 
@@ -296,13 +241,6 @@ extension ImageGalleryDocumentTableVC {
                 imageGalleryVC.cellComponents = documents[section][row].documentComponents
                 previousDocumentID = documents[section][row].ID
             }
-            
-          
-//            let row = (tableView.indexPathsForSelectedRows?.first?.row)!
-//            let section = (tableView.indexPathsForSelectedRows?.first?.section)!
-//            let rowIndex = (sender as! IndexPath).row
-//            let sectionIndex = (sender as! IndexPath).section
-            
         }
     }
 }
@@ -351,5 +289,17 @@ struct Keys {
 //           return 0
 //        }
 //        return number
+//    }
+//}
+
+
+//extension Array where Self == [GalleryDocument] {
+//    mutating func customRemove(at index: Int) -> Element {
+//        let removedElement = self.remove(at: index)
+//
+//        if self.count == 0 {
+//            remove(at: 1)
+//        }
+//        return removedElement
 //    }
 //}
